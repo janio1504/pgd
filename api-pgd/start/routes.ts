@@ -24,6 +24,10 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('/login', 'SessionsController.login')
 
+Route.get('/', ()=>{
+    return "teste de rota."
+})
+
 Route.group(() => {
     Route.get('/get-servidor', 'ServidoresController.getServidor')
 }).middleware('auth')
