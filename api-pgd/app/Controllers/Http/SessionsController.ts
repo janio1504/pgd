@@ -20,7 +20,7 @@ export default class SessionsController {
 
       const user = {
         id: resUser[0].id_usuario,
-        ...resUser[0]
+        //...resUser[0]
       }
       
       const token = await auth.use('api').generate(user, {expiresIn: '120 mins' })

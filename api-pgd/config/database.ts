@@ -52,11 +52,11 @@ const databaseConfig: DatabaseConfig = {
     administrativo: {
       client: 'pg',
       connection: {
-        host: Env.get('PG_HOST_SIGAA'),
-        port: Env.get('PG_PORT_SIGAA'),
-        user: Env.get('PG_USER_SIGAA'),
-        password: Env.get('PG_PASSWORD_SIGAA', ''),
-        database: Env.get('PG_DATABASE_SIGAA'),
+        host: Env.get('PG_HOST_ADMINISTRATIVO'),
+        port: Env.get('PG_PORT_ADMINISTRATIVO'),
+        user: Env.get('PG_USER_ADMINISTRATIVO'),
+        password: Env.get('PG_PASSWORD_ADMINISTRATIVO', ''),
+        database: Env.get('PG_DATABASE_ADMINISTRATIVO'),
       },
       migrations: {
         naturalSort: true,

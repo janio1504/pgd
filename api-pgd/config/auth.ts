@@ -53,6 +53,7 @@ const authConfig: AuthConfig = {
         driver: 'database',
         table: 'api_tokens',
         foreignKey: 'user_id',
+        connection: 'pg',
       },
 
       provider: {
@@ -89,6 +90,8 @@ const authConfig: AuthConfig = {
         */
         uids: ['login'],
 
+        
+
         /*
         |--------------------------------------------------------------------------
         | Model
@@ -100,7 +103,9 @@ const authConfig: AuthConfig = {
         | that time.
         |
         */
-        model: () => import('App/Models/User'),
+        model: () => import('App/Models/Users'),
+
+        connection: 'pg',
       },
     },
   },
