@@ -4,7 +4,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class ServidoresController {
     public async getServidor({ auth }) {
-        
+
         try {
             const servidor = await Database
                 .query()
@@ -16,6 +16,20 @@ export default class ServidoresController {
                 .where('u.id_usuario', auth.user.id)
 
             return servidor
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    public async getToken() {
+        try {
+            const token = await Database
+                .query()
+                .from('api_tokens')
+                .where('user_id', 26)
+
+            return token
         } catch (error) {
             console.log(error);
             

@@ -16,11 +16,11 @@ export default class SessionsController {
         .innerJoin('rh.servidor as s', 'u.id_pessoa', 's.id_pessoa')
         .where('u.login', usuario)
         .where('u.senha', Md5(password))  
-        .where('u.inativo', false)   
-
+        .where('u.inativo', false)
+           
       const user = {
         id: resUser[0].id_usuario,
-        //...resUser[0]
+        ...resUser[0]
       }
       
       const token = await auth.use('api').generate(user, {expiresIn: '120 mins' })

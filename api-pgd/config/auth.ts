@@ -104,8 +104,6 @@ const authConfig: AuthConfig = {
         |
         */
         model: () => import('App/Models/Users'),
-
-        connection: 'pg',
       },
     },
   },
