@@ -22,14 +22,22 @@ export default class ServidoresController {
         }
     }
 
-    public async getToken() {
+    public async isChefe({ request }) {
         try {
-            const token = await Database
-                .query()
-                .from('api_tokens')
-                .where('user_id', 26)
+            const { unidade_id, servidor_id } = request.all()
 
-            return token
+            const isChefe = await Database
+                .query()
+                .from('rh.servidor as s')
+                .join('comum.responsavel_unidade as ru', 's.id_servidor', 'ru.id_servidor')
+                .where('s.id_servidor', servidor_id)
+                .where('ru.id_unidade', unidade_id)
+                .whereNull('s.data_desligamento')
+                .whereNull('ru.data_fim')
+                .whereIn('ru.nivel_responsabilidade', ['C','V'])            
+            
+            return isChefe.length > 0 ? true : false
+
         } catch (error) {
             console.log(error);
             

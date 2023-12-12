@@ -1,27 +1,33 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Editais extends BaseModel {
+export default class Plano extends BaseModel {
+
+  public static connection = 'pg'
+  
   @column({ isPrimary: true })
-  public id: number
+  public plano_id: number
 
   @column()
-  public nome: string
+  public nome_plano: string
 
   @column()
-  public descricao: string
+  public descricao_plano: string
 
   @column()
-  public data_cadastro: string
+  public data_cadastro_plano: string
 
   @column()
-  public arquivo_id: number
+  public plano_superior_id: number
 
   @column()
-  public projeto_id: number
+  public unidade_id: number
 
   @column()
-  public turma_id: number
+  public servidor_id: number
+
+  @column()
+  public tipo_plano_id: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

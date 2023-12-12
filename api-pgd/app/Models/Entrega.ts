@@ -1,21 +1,24 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Certificado extends BaseModel {
+export default class Entrega extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public pessoa_id: number
+  public descricao: string
 
   @column()
-  public turma_id: number
+  public observacao: string
 
   @column()
-  public ativo: boolean
+  public data_cadastro: string
 
   @column()
-  public token: string
+  public horas: string
+
+  @column()
+  public atividade_id: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

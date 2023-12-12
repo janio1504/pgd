@@ -24,6 +24,12 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('/login', 'SessionsController.login')
 
+Route.post('/get-chefe', 'ServidoresController.isChefe')
+
+
+Route.post('/create-plano-gerencial', 'PlanosController.createPlano')
+Route.get('/get-planos-servidor/:id', 'PlanosController.getPlanosIndividuais')
+
 Route.group(() => {
     Route.get('/get-servidor', 'ServidoresController.getServidor')
 }).middleware('auth')

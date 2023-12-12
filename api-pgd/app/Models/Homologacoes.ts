@@ -1,12 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class TipoUser extends BaseModel {
+export default class Homologacoe extends BaseModel {
   @column({ isPrimary: true })
   public id: number
-
-  @column()
-  public descricao: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -1,24 +1,12 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Arquivo extends BaseModel {
+export default class TipoPlano extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public field_name: string
-
-  @column()
-  public client_name: string
-
-  @column()
-  public tipo_documento_id: number
-
-  @column()
-  public type: string
-
-  @column()
-  public subtype: string
+  public descricao: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
