@@ -3,6 +3,9 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
 export default class users extends BaseModel {
+
+  public static connection = 'pg'
+
   @column({ isPrimary: true })
   public id: number
 
