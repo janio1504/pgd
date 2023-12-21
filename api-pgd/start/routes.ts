@@ -26,7 +26,7 @@ Route.post('/login', 'SessionsController.login')
 
 Route.group(() => {
     Route.get('/get-servidor', 'ServidoresController.getServidor')
-    Route.post('/get-chefe', 'ServidoresController.isChefe')
+    Route.get('/get-chefe', 'ServidoresController.isChefe')
 
     Route.post('/create-plano-entrega', 'PlanoEntregaController.createPlanoEntrega')
     Route.post('/update-plano-entrega', 'PlanoEntregaController.updatePlanoEntrega')
