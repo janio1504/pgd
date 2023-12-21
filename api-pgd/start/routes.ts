@@ -24,13 +24,18 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('/login', 'SessionsController.login')
 
-Route.post('/get-chefe', 'ServidoresController.isChefe')
-
-
-Route.post('/create-plano-gerencial', 'PlanosController.createPlano')
-Route.get('/get-planos-servidor/:id', 'PlanosController.getPlanosIndividuais')
-
 Route.group(() => {
     Route.get('/get-servidor', 'ServidoresController.getServidor')
+    Route.post('/get-chefe', 'ServidoresController.isChefe')
+
+    Route.post('/create-plano-entrega', 'PlanoEntregaController.createPlanoEntrega')
+    Route.post('/update-plano-entrega', 'PlanoEntregaController.updatePlanoEntrega')
+    Route.get('/get-planos-entrega/:id', 'PlanoEntregaController.getPlanosDeEntrega')
+    Route.delete('/delete-plano-entrega/:id', 'PlanoEntregaController.destroy')
+
+    Route.post('/create-plano-trabalho', 'PlanoTrabalhoController.createPlanoTrabalho')
+    Route.post('/update-plano-trabalho', 'PlanoTrabalhoController.updatePlanoTrabalho')
+    Route.get('/get-planos-trabalho/:id', 'PlanoTrabalhoController.getPlanosDeTrabalho')
+    Route.delete('/delete-plano-trabalho/:id', 'PlanoEntregaController.destroy')
 }).middleware('auth')
 
