@@ -8,7 +8,7 @@ export default class ServidoresController {
         try {
             const servidor = await Database
                 .query()
-                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
+                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa','s.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
                 .from('rh.servidor as s')
                 .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
                 .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
@@ -22,16 +22,19 @@ export default class ServidoresController {
         }
     }
 
-    public async isChefe({ request }) {
+    public async isChefe({ auth }) {
         try {
-            const { unidade_id, servidor_id } = request.all()
-
+            
+            const rs = await this.getServidor({ auth })
+            let servidor 
+            rs?.map(serv =>{ servidor =  serv })
+            
             const isChefe = await Database
                 .query()
                 .from('rh.servidor as s')
                 .join('comum.responsavel_unidade as ru', 's.id_servidor', 'ru.id_servidor')
-                .where('s.id_servidor', servidor_id)
-                .where('ru.id_unidade', unidade_id)
+                .where('s.id_servidor', servidor.id_servidor)
+                .where('ru.id_unidade', servidor.id_unidade_lotacao)
                 .whereNull('s.data_desligamento')
                 .whereNull('ru.data_fim')
                 .whereIn('ru.nivel_responsabilidade', ['C','V'])            
