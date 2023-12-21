@@ -37,5 +37,6 @@ Route.group(() => {
     Route.post('/update-plano-trabalho', 'PlanoTrabalhoController.updatePlanoTrabalho')
     Route.get('/get-planos-trabalho/:id', 'PlanoTrabalhoController.getPlanosDeTrabalho')
     Route.delete('/delete-plano-trabalho/:id', 'PlanoEntregaController.destroy')
+    
 }).middleware('auth')
 

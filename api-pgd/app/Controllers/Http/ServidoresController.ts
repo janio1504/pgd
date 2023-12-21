@@ -15,26 +15,28 @@ export default class ServidoresController {
                 .join('comum.unidade as un', 's.id_unidade_lotacao', 'un.id_unidade')
                 .where('u.id_usuario', auth.user.id)
 
-            return servidor
+                const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+                const rsServidor = {
+                    ...servidor[0],
+                    isChefe: isChefe
+                } 
+
+            return rsServidor
         } catch (error) {
             console.log(error);
 
         }
     }
 
-    public async isChefe({ auth }) {
-        try {
-            
-            const rs = await this.getServidor({ auth })
-            let servidor 
-            rs?.map(serv =>{ servidor =  serv })
+    public async isChefe( id_servidor, id_unidade_lotacao ) {
+        try { 
             
             const isChefe = await Database
                 .query()
                 .from('rh.servidor as s')
                 .join('comum.responsavel_unidade as ru', 's.id_servidor', 'ru.id_servidor')
-                .where('s.id_servidor', servidor.id_servidor)
-                .where('ru.id_unidade', servidor.id_unidade_lotacao)
+                .where('s.id_servidor', id_servidor)
+                .where('ru.id_unidade', id_unidade_lotacao)
                 .whereNull('s.data_desligamento')
                 .whereNull('ru.data_fim')
                 .whereIn('ru.nivel_responsabilidade', ['C','V'])            
