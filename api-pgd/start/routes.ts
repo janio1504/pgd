@@ -38,6 +38,12 @@ Route.group(() => {
     Route.get('/get-planos-trabalho/:id', 'PlanoTrabalhoController.getPlanosDeTrabalho')
     Route.delete('/delete-plano-trabalho/:id', 'PlanoEntregaController.destroy')
 
+    Route.post('/create-meta-plano-entrega', 'MetasController.createMeta')
+    Route.post('/update-meta-plano-entrega', 'MetasController.updateMeta')
+    Route.get('/get-metas-planos-entrega/:id', 'MetasController.getMetas')
+    Route.delete('/delete-meta-plano-entrega/:id', 'MetasController.destroy')
+    
+
 }).middleware('auth:api')
 
 
