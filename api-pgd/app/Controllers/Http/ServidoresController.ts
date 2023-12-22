@@ -4,7 +4,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class ServidoresController {
     public async getServidor({ auth }) {
-
+        
         try {
             const servidor = await Database
                 .query()
@@ -12,7 +12,7 @@ export default class ServidoresController {
                 .from('rh.servidor as s')
                 .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
                 .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
-                .join('comum.unidade as un', 's.id_unidade_lotacao', 'un.id_unidade')
+                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
                 .where('u.id_usuario', auth.user.id)
 
                 const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)

@@ -17,11 +17,14 @@ export default class SessionsController {
         .where('u.login', usuario)
         .where('u.senha', Md5(password))  
         .where('u.inativo', false)
+        .orderBy('u.id_usuario', 'desc')
            
+        //console.log(resUser[0]);
+        
       const user = {
         id: resUser[0].id_usuario,
         ...resUser[0]
-      }
+      }      
       
       const token = await auth.use('api').generate(user, {expiresIn: '120 mins' })
       
