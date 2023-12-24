@@ -40,17 +40,23 @@ export default class PlanoTrabalhoController {
 
         const { plano_trabalho_id
             , nome_plano_trabalho
+            , plano_entrega_id
             , data_inicio
-            , data_fim } = request.all()
+            , data_fim
+            , percentual_atividade_nao_vinculadas
+            , situacao_id } = request.all()
         try {
             const plano = await Database
             .connection('pg')
             .from('plano_trabalho')
             .where('plano_trabalho_id', plano_trabalho_id)
             .update({
-                nome_plano_entrega: nome_plano_trabalho,
+                nome_plano_trabalho: nome_plano_trabalho,
+                plano_entrega_id: plano_entrega_id,
                 data_inicio: data_inicio,
-                data_fim: data_fim
+                data_fim: data_fim,
+                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
+                situacao_id: situacao_id
             })
 
             return plano
@@ -62,21 +68,27 @@ export default class PlanoTrabalhoController {
 
 
     public async createPlanoTrabalho({ request }) {
-        const { nome_plano_entrega
-            , unidade_id
+        const { nome_plano_trabalho
+            , plano_entrega_id
             , data_inicio
-            , data_fim } = request.all()
+            , data_fim
+            , servidor_id
+            , percentual_atividade_nao_vinculadas
+            , situacao_id } = request.all()
         try {
-
+            
             const plano = await Database
             .connection('pg')
             .insertQuery()
             .table('plano_trabalho')
             .insert({
-                nome_plano_entrega: nome_plano_entrega,
-                unidade_id: unidade_id,
+                nome_plano_trabalho: nome_plano_trabalho,
+                plano_entrega_id: plano_entrega_id,
                 data_inicio: data_inicio,
-                data_fim: data_fim
+                data_fim: data_fim,
+                servidor_id: servidor_id,
+                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
+                situacao_id: situacao_id
             })
            
             return plano

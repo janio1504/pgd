@@ -17,6 +17,12 @@ export default class PlanoTrabalho extends BaseModel {
   @column()
   public plano_entrega_id: number
 
+  @column()
+  public percentual_atividade_nao_vinculadas: string
+
+  @column()
+  public situacao_id: number
+
   @column.dateTime()
   public data_inicio: DateTime
 
