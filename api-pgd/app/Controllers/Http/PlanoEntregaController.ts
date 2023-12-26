@@ -22,6 +22,7 @@ export default class PlanoEntregaController {
     }
 
     public async getPlanoDeEntrega({ params }){
+        
         try {
             const plano = await Database
             .connection('pg')
@@ -29,7 +30,7 @@ export default class PlanoEntregaController {
             .from('plano_entregas as p')
             .where('p.plano_entrega_id',params.id)
 
-            return plano
+            return plano[0]
         } catch (error) {
             console.log(error);
             

@@ -47,6 +47,22 @@ export default class MetasController {
         }
     }
 
+    public async getMeta({ params }){
+        
+        try {
+            const metas = await Database
+            .connection('pg')
+            .query()
+            .from('meta_plano_entrega as m')
+            .where('m.meta_plano_entrega_id', params.id)
+
+            return metas
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     public async updateMeta({ request }){
 
         const { meta_plano_entrega_id, titulo, indicador, meta, prazo, demandate, destinatario, alinhamento_estrategico } = request.all()
