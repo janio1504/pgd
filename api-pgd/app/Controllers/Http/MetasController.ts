@@ -3,7 +3,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class MetasController {
     public async createMeta({ request }) {
-        const { titulo, indicador, meta, prazo, demandate, destinatario, alinhamento_estrategico, plano_entrega_id } = request.all()
+        const { titulo, indicador, meta, prazo, demandante, destinatario, alinhamento_estrategico, plano_entrega_id } = request.all()
         try {
 
             const plano = await Database
@@ -15,7 +15,7 @@ export default class MetasController {
                     indicador: indicador,
                     meta: meta,
                     prazo: prazo,
-                    demandate: demandate,
+                    demandante: demandante,
                     destinatario: destinatario,
                     alinhamento_estrategico: alinhamento_estrategico,
                     plano_entrega_id: plano_entrega_id
