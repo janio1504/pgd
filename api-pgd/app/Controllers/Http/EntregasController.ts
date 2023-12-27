@@ -2,7 +2,7 @@
 import Entrega from "App/Models/Entrega"
 
 export default class EntregasController {
-    public async createAtividade({ request }) {
+    public async createEntrega({ request }) {
         const { descricao
             , observacao
             , data_cadastro

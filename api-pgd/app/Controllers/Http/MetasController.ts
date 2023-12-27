@@ -7,95 +7,96 @@ export default class MetasController {
         try {
 
             const plano = await Database
-            .connection('pg')
-            .insertQuery()
-            .table('meta_plano_entrega')
-            .insert({
-                titulo: titulo,
-                indicador: indicador,
-                meta: meta,
-                prazo: prazo,
-                demandate: demandate,
-                destinatario: destinatario,
-                alinhamento_estrategico: alinhamento_estrategico,
-                plano_entrega_id: plano_entrega_id
-            })
-           
+                .connection('pg')
+                .insertQuery()
+                .table('meta_plano_entrega')
+                .insert({
+                    titulo: titulo,
+                    indicador: indicador,
+                    meta: meta,
+                    prazo: prazo,
+                    demandate: demandate,
+                    destinatario: destinatario,
+                    alinhamento_estrategico: alinhamento_estrategico,
+                    plano_entrega_id: plano_entrega_id
+                })
+
             return plano
         } catch (error) {
-            
+
             console.log(error);
-            return error 
+            return error
 
         }
     }
 
-    public async getMetas({ params }){
-        
+    public async getMetas({ params }) {
+
         try {
             const metas = await Database
-            .connection('pg')
-            .query()
-            .from('meta_plano_entrega as m')
-            .where('m.plano_entrega_id', params.id)
-            .orderBy('m.meta_plano_entrega_id', "desc")
+                .connection('pg')
+                .query()
+                .from('meta_plano_entrega as m')
+                .where('m.plano_entrega_id', params.id)
+                .orderBy('m.meta_plano_entrega_id', "desc")
 
             return metas
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
-    public async getMeta({ params }){
-        
+    public async getMeta({ params }) {
+
         try {
             const metas = await Database
-            .connection('pg')
-            .query()
-            .from('meta_plano_entrega as m')
-            .where('m.meta_plano_entrega_id', params.id)
+                .connection('pg')
+                .query()
+                .from('meta_plano_entrega as m')
+                .where('m.meta_plano_entrega_id', params.id)
 
             return metas
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
-    public async updateMeta({ request }){
+    public async updateMeta({ request }) {
 
         const { meta_plano_entrega_id, titulo, indicador, meta, prazo, demandate, destinatario, alinhamento_estrategico } = request.all()
         try {
             const plano = await Database
-            .connection('pg')
-            .from('meta_plano_entrega')
-            .where('meta_plano_entrega_id', meta_plano_entrega_id)
-            .update({
-                titulo: titulo,
-                indicador: indicador,
-                meta: meta,
-                prazo: prazo,
-                demandate: demandate,
-                destinatario: destinatario,
-                alinhamento_estrategico: alinhamento_estrategico
-            })
+                .connection('pg')
+                .from('meta_plano_entrega')
+                .where('meta_plano_entrega_id', meta_plano_entrega_id)
+                .update({
+                    titulo: titulo,
+                    indicador: indicador,
+                    meta: meta,
+                    prazo: prazo,
+                    demandate: demandate,
+                    destinatario: destinatario,
+                    alinhamento_estrategico: alinhamento_estrategico
+                })
 
             return plano
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
-    public async destroy({ params }){
+    public async destroy({ params }) {
         try {
-            // const plano = await Plano.findByOrFail('plano_entrega_id',params.id)
-            // await plano.delete()
-            // return "O Plano "+plano.nome_plano_entrega+" foi removido"
+            await Database.from('meta_plano_entrega')
+                .where('meta_plano_entrega_id', params.id)
+                .delete()
+            return "Meta removida com sucesso!"
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 }
