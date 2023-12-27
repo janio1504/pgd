@@ -90,7 +90,9 @@ export default class MetasController {
 
     public async destroy({ params }) {
         try {
-            await Database.from('meta_plano_entrega')
+            await Database
+                .connection('pg')
+                .from('meta_plano_entrega')
                 .where('meta_plano_entrega_id', params.id)
                 .delete()
             return "Meta removida com sucesso!"
