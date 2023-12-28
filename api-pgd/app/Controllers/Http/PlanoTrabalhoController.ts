@@ -13,7 +13,6 @@ export default class PlanoTrabalhoController {
             .from('plano_trabalho as p')
             .where('p.servidor_id', params.id)
             .orderBy('p.plano_trabalho_id', "desc")
-
             return planos
         } catch (error) {
             console.log(error);
@@ -77,7 +76,7 @@ export default class PlanoTrabalhoController {
             , situacao_id } = request.all()
         try {
 
-            
+
             
             const plano = await Database
             .connection('pg')

@@ -52,6 +52,7 @@ export default class AtividadesController {
             atividade.obs_atividade = obs_atividade
             await atividade.save()
 
+            return "Tarefa criada com sucesso!"
         } catch (error) {
             console.log(error);
 
@@ -82,6 +83,7 @@ export default class AtividadesController {
             atividade.obs_atividade = obs_atividade
             await atividade.save()
 
+            return "Tarefa atualizada com sucesso!"
         } catch (error) {
             console.log(error);
 
