@@ -50,9 +50,9 @@ Route.group(() => {
     Route.delete('/delete-plano-trabalho/:id', 'PlanoEntregaController.destroy')
 
     Route.post('/create-tarefa', 'AtividadesController.createAtividade')
-    Route.post('/update-tarefa', 'AtividadesController.updatePlanoTrabalho')
-    Route.get('/get-tarefas/:id', 'AtividadesController.getTarefas')
-    Route.get('/get-tarefa/:id', 'AtividadesController.getTarefa')
+    Route.post('/update-tarefa', 'AtividadesController.updateAtividade')
+    Route.get('/get-tarefas/:id', 'AtividadesController.getAtividades')
+    Route.get('/get-tarefa/:id', 'AtividadesController.getAtividade')
     Route.delete('/delete-tarefa/:id', 'AtividadesController.destroy')
 
    
