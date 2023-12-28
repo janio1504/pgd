@@ -12,7 +12,7 @@ export default class PlanoTrabalhoController {
             .query()
             .select('p.*','s.descricao as situacao')
             .from('plano_trabalho as p')           
-            .innerJoin('situacao as s ', 'p.situacao_id', 's.situacao_id')
+            .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
             .where('p.servidor_id', params.id)
             .orderBy('p.plano_trabalho_id', "desc")
             return planos
@@ -29,7 +29,7 @@ export default class PlanoTrabalhoController {
             .query()
             .select('p.*','s.descricao as situacao')
             .from('plano_trabalho as p')
-            .innerJoin('situacao as s ', 'p.situacao_id', 's.situacao_id')
+            .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
             .where('p.plano_trabalho_id',params.id)
 
             return plano
