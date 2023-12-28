@@ -4,9 +4,10 @@ import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 export default class PlanoTrabalho extends BaseModel {
 
   public static connection = 'pg'
+  public static table = 'plano_trabalho'
   
   @column({ isPrimary: true })
-  public plano_id: number
+  public plano_trabalho_id: number
 
   @column()
   public nome_plano_trabalho: string
