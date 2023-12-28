@@ -49,17 +49,25 @@ export default class PlanoTrabalhoController {
             , percentual_atividade_nao_vinculadas
             , situacao_id } = request.all()
         try {
+
+            const rsPlano = await Database
+            .connection('pg')
+            .query()
+            .from('plano_trabalho as p')
+            .where('p.plano_trabalho_id',plano_trabalho_id)
+
+
             const plano = await Database
             .connection('pg')
             .from('plano_trabalho')
             .where('plano_trabalho_id', plano_trabalho_id)
             .update({
-                nome_plano_trabalho: nome_plano_trabalho,
-                plano_entrega_id: plano_entrega_id,
-                data_inicio: data_inicio,
-                data_fim: data_fim,
-                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
-                situacao_id: situacao_id
+                nome_plano_trabalho: nome_plano_trabalho ? nome_plano_trabalho : rsPlano[0].nome_plano_trabalho,
+                plano_entrega_id: plano_entrega_id ? plano_entrega_id : rsPlano[0].plano_entrega_id,
+                data_inicio: data_inicio ? data_inicio : rsPlano[0].data_inicio,
+                data_fim: data_fim ? data_fim : rsPlano[0].data_fim,
+                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas ? percentual_atividade_nao_vinculadas : rsPlano[0].percentual_atividade_nao_vinculadas,
+                situacao_id: situacao_id ? situacao_id : rsPlano[0].situacao_id
             })
 
             return plano
