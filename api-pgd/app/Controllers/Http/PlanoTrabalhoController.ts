@@ -4,7 +4,7 @@ import Plano from "App/Models/PlanoTrabalho";
 
 export default class PlanoTrabalhoController {
 
-    public async getPlanosDeTrabalho({ params }){
+    public async getPlanosTrabalho({ params }){
         
         try {
             const planos = await Database
