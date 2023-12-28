@@ -76,6 +76,8 @@ export default class PlanoTrabalhoController {
             , percentual_atividade_nao_vinculadas
             , situacao_id } = request.all()
         try {
+
+            
             
             const plano = await Database
             .connection('pg')
@@ -104,7 +106,7 @@ export default class PlanoTrabalhoController {
 
     public async destroy({ params }){
         try {
-            const plano = await Plano.findByOrFail('plano_entrega_id',params.id)
+            const plano = await Plano.findByOrFail('plano_trabalho_id',params.id)
             await plano.delete()
             return "O Plano "+plano.nome_plano_trabalho+" foi remvido definitivamente"
         } catch (error) {

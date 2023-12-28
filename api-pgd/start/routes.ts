@@ -24,7 +24,7 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('/login', 'SessionsController.login')
 
-
+Route.get('/hu', 'ServidoresController.hierarquiaUnidade')
 
 Route.group(() => {
 
@@ -48,6 +48,12 @@ Route.group(() => {
     Route.get('/get-planos-trabalho/:id', 'PlanoTrabalhoController.getPlanosDeTrabalho')
     Route.get('/get-plano-trabalho/:id', 'PlanoTrabalhoController.getPlanoDeTrabalho')
     Route.delete('/delete-plano-trabalho/:id', 'PlanoEntregaController.destroy')
+
+    Route.post('/create-tarefa', 'AtividadesController.createAtividade')
+    Route.post('/update-tarefa', 'AtividadesController.updatePlanoTrabalho')
+    Route.get('/get-tarefas/:id', 'AtividadesController.getTarefas')
+    Route.get('/get-tarefa/:id', 'AtividadesController.getTarefa')
+    Route.delete('/delete-tarefa/:id', 'AtividadesController.destroy')
 
    
     

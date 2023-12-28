@@ -1,4 +1,5 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from "@ioc:Adonis/Lucid/Database";
 import Atividade from "App/Models/Atividade"
 
 export default class AtividadesController {
@@ -11,6 +12,19 @@ export default class AtividadesController {
             .where('plano_trabalho_id',params.id)
 
             return atividades
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    public async getAtividade({ params }){
+        try {
+            const atividade = await Atividade
+            .query()
+            .where('atividade_id',params.id)
+
+            return atividade
         } catch (error) {
             console.log(error);
             
@@ -74,5 +88,19 @@ export default class AtividadesController {
         }
 
 
+    }
+
+    public async destroy({ params }) {
+        try {
+            await Database
+                .connection('pg')
+                .from('atividades')
+                .where('atividade_id', params.id)
+                .delete()
+            return "tarefa removida com sucesso!"
+        } catch (error) {
+            console.log(error);
+
+        }
     }
 }
