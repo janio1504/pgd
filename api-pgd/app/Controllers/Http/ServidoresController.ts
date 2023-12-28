@@ -54,7 +54,7 @@ export default class ServidoresController {
             const hierarquia = await Database
                 .from('comum.unidade as u')
                 .select('u.hierarquia')
-                .where('u.id_unidade', 3004)
+                .where('u.id_unidade', 2966)
 
                 let hu = ''
 
@@ -66,7 +66,7 @@ export default class ServidoresController {
                 const us = hu.split('.')
                 console.log(us.length -1);
                 const n = us.length -3
-            return us[n]
+            return hu
         } catch (error) {
             console.log(error);            
         }

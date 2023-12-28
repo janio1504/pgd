@@ -10,7 +10,9 @@ export default class PlanoTrabalhoController {
             const planos = await Database
             .connection('pg')
             .query()
-            .from('plano_trabalho as p')
+            .select('p.*','s.descricao as situacao')
+            .from('plano_trabalho as p')           
+            .innerJoin('situacao as s ', 'p.situacao_id', 's.situacao_id')
             .where('p.servidor_id', params.id)
             .orderBy('p.plano_trabalho_id', "desc")
             return planos
@@ -25,7 +27,9 @@ export default class PlanoTrabalhoController {
             const plano = await Database
             .connection('pg')
             .query()
+            .select('p.*','s.descricao as situacao')
             .from('plano_trabalho as p')
+            .innerJoin('situacao as s ', 'p.situacao_id', 's.situacao_id')
             .where('p.plano_trabalho_id',params.id)
 
             return plano
