@@ -32,7 +32,9 @@ export default class AtividadesController {
     }
 
     public async createAtividade({ request }) {
-        const { descricao_atividade
+        const { 
+              titulo_atividade
+            , descricao_atividade
             , data_inicio
             , data_fim
             , horas_atividade
@@ -42,7 +44,7 @@ export default class AtividadesController {
         try {
             
             const atividade = new Atividade()
-
+            atividade.titulo_atividade = titulo_atividade
             atividade.descricao_atividade = descricao_atividade
             atividade.data_inicio = data_inicio
             atividade.data_fim = data_fim
@@ -61,8 +63,9 @@ export default class AtividadesController {
 
     }
 
-    public async updateAtividade({ request }) {
+    public async updateAtividade({ request, response }) {
         const { atividade_id
+            , titulo_atividade
             , descricao_atividade
             , data_inicio
             , data_fim
@@ -73,7 +76,7 @@ export default class AtividadesController {
         try {
             
             const atividade = await Atividade.findByOrFail('atividade_id', atividade_id)
-
+            atividade.titulo_atividade = titulo_atividade ? titulo_atividade : atividade.titulo_atividade
             atividade.descricao_atividade = descricao_atividade ? descricao_atividade : atividade.descricao_atividade
             atividade.data_inicio = data_inicio ? data_inicio : atividade.data_inicio
             atividade.data_fim = data_fim ? data_fim : atividade.data_fim
@@ -81,9 +84,10 @@ export default class AtividadesController {
             atividade.plano_trabalho_id = plano_trabalho_id ? plano_trabalho_id : atividade.plano_trabalho_id
             atividade.meta_plano_entrega_id = meta_plano_entrega_id ? meta_plano_entrega_id : atividade.meta_plano_entrega_id
             atividade.obs_atividade = obs_atividade
+
             await atividade.save()
 
-            return "Tarefa atualizada com sucesso!"
+            return response.send("Tarefa atualizada com sucesso!")
         } catch (error) {
             console.log(error);
 

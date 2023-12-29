@@ -9,6 +9,9 @@ export default class Atividade extends BaseModel {
   public atividade_id: number
 
   @column()
+  public titulo_atividade: string
+
+  @column()
   public descricao_atividade: string
 
   @column()
