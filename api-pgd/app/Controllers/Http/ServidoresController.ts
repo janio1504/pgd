@@ -28,6 +28,48 @@ export default class ServidoresController {
         }
     }
 
+    public async getServidoresUnidade({ params }) {
+
+
+        try {
+            const rsServidores = await Database
+                .query()
+                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade', 's.siape', 'un.nome as lotacao')
+                .from('rh.servidor as s')
+                .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
+                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
+                .whereNull('s.data_desligamento')
+                .where('s.id_unidade', params.id)
+
+                
+                
+            const servidores = rsServidores.map(async servidor=>{
+                const rs = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.servidor_id', servidor.id_servidor)
+                .where('p.unidade_id', servidor.id_unidade)
+
+               
+                const rsServidor = {
+                    ...servidor,
+                    situacao: rs[0]?.situacao == true ? true : false
+                }
+
+                
+                return rsServidor
+            })
+
+            
+
+            return await Promise.all(servidores)
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     public async isChefe(id_servidor, id_unidade_lotacao) {
         try {
 

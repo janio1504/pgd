@@ -39,7 +39,7 @@ export default class PlanoTrabalhoController {
         }
     }
     
-    public async updatePlanoTrabalho({ request }){
+    public async updatePlanoTrabalho({ request, response }){
 
         const { plano_trabalho_id
             , nome_plano_trabalho
@@ -57,7 +57,7 @@ export default class PlanoTrabalhoController {
             .where('p.plano_trabalho_id',plano_trabalho_id)
 
 
-            const plano = await Database
+            await Database
             .connection('pg')
             .from('plano_trabalho')
             .where('plano_trabalho_id', plano_trabalho_id)
@@ -70,7 +70,7 @@ export default class PlanoTrabalhoController {
                 situacao_id: situacao_id ? situacao_id : rsPlano[0].situacao_id
             })
 
-            return plano
+            return response.status(200).send('Atualização realizada com sucesso!')
         } catch (error) {
             console.log(error);
             

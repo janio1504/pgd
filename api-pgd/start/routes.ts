@@ -29,6 +29,7 @@ Route.get('/hu', 'ServidoresController.hierarquiaUnidade')
 Route.group(() => {
 
     Route.get('/get-servidor', 'ServidoresController.getServidor')
+    Route.get('/get-servidores-unidade/:id', 'ServidoresController.getServidoresUnidade')
     
 
     Route.post('/create-plano-entrega', 'PlanoEntregaController.createPlanoEntrega')
@@ -54,6 +55,11 @@ Route.group(() => {
     Route.get('/get-tarefas/:id', 'AtividadesController.getAtividades')
     Route.get('/get-tarefa/:id', 'AtividadesController.getAtividade')
     Route.delete('/delete-tarefa/:id', 'AtividadesController.destroy')
+
+    Route.post('/create-participante', 'ParticipantesController.createParticipante')
+    Route.post('/update-participante', 'ParticipantesController.updateParticipante')
+    Route.get('/get-participantes-unidade/:id', 'ParticipantesController.getParticipantesUnidade')
+    Route.get('/get-participante/:id', 'ParticipantesController.getParticipante')
 
    
     
