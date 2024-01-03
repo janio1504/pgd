@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
 import Plano from "App/Models/PlanoEntrega";
+import Situacao from  "App/Models/Situacao"
 
 export default class PlanoEntregaController {
 
@@ -14,7 +15,17 @@ export default class PlanoEntregaController {
             .where('p.unidade_id', params.id)
             .orderBy('p.plano_entrega_id', "desc")
 
-            return planos
+            const planosEntrega = planos.map(plano=>{
+                const planoEntrega = {
+                    ...plano,
+                    situacao: Situacao.situacao(plano.situacao_id)
+                }
+
+                return planoEntrega
+            })
+
+
+            return planosEntrega
         } catch (error) {
             console.log(error);
             
@@ -30,7 +41,16 @@ export default class PlanoEntregaController {
             .from('plano_entregas as p')
             .where('p.plano_entrega_id',params.id)
 
-            return plano[0]
+            const planoEntrega = plano.map(plano=>{
+                const pe = {
+                    ...plano,
+                    situacao: Situacao.situacao(plano.situacao_id)
+                }
+
+                return pe
+            })
+
+            return planoEntrega[0]
         } catch (error) {
             console.log(error);
             
@@ -45,6 +65,7 @@ export default class PlanoEntregaController {
             , data_inicio
             , data_fim } = request.all()
         try {
+            
             const plano = await Database
             .connection('pg')
             .from('plano_entregas')
@@ -64,12 +85,40 @@ export default class PlanoEntregaController {
     }
 
 
-    public async createPlanoEntrega({ request }) {
+    public async createPlanoEntrega({ request, response }) {
         const { nome_plano_entrega
             , unidade_id
             , data_inicio
             , data_fim } = request.all()
-        try {
+        try {   
+            
+            if (!nome_plano_entrega) {
+                throw response.status(400).send("O campo nome plano de entrega é obrigatório!")
+            }
+
+            if (!unidade_id) {
+                throw response.status(400).send("O campo unidade é obrigatório!")
+            }
+
+            if (!data_inicio) {
+                throw response.status(400).send("O campo data de inicio é obrigatório!")
+            }
+
+            if (!data_fim) {
+                throw response.status(400).send("O campo data de fim é obrigatório!")
+            }
+            
+            const rsPe = await Database
+            .connection('pg')
+            .query()
+            .from('plano_entregas as p')
+            .where('p.unidade_id', unidade_id)
+            .whereIn('p.situacao_id', [1,3])
+            .orderBy('p.plano_entrega_id', 'desc')
+
+            if(rsPe[0]){
+                throw response.status(400).send("Já existe um plano de entrega cadastrado ativo ou em analise para a unidade!");                
+            }
 
             const plano = await Database
             .connection('pg')
@@ -79,7 +128,8 @@ export default class PlanoEntregaController {
                 nome_plano_entrega: nome_plano_entrega,
                 unidade_id: unidade_id,
                 data_inicio: data_inicio,
-                data_fim: data_fim
+                data_fim: data_fim,
+                situacao_id: 3
             })
            
             return plano

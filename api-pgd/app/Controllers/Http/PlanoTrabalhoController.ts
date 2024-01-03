@@ -4,42 +4,42 @@ import Plano from "App/Models/PlanoTrabalho";
 
 export default class PlanoTrabalhoController {
 
-    public async getPlanosTrabalho({ params }){
-        
+    public async getPlanosTrabalho({ params }) {
+
         try {
             const planos = await Database
-            .connection('pg')
-            .query()
-            .select('p.*','s.descricao as situacao')
-            .from('plano_trabalho as p')           
-            .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
-            .where('p.servidor_id', params.id)
-            .orderBy('p.plano_trabalho_id', "desc")
+                .connection('pg')
+                .query()
+                .select('p.*', 's.descricao as situacao')
+                .from('plano_trabalho as p')
+                .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
+                .where('p.servidor_id', params.id)
+                .orderBy('p.plano_trabalho_id', "desc")
             return planos
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
-    public async getPlanoTrabalho({ params }){
+    public async getPlanoTrabalho({ params }) {
         try {
             const plano = await Database
-            .connection('pg')
-            .query()
-            .select('p.*','s.descricao as situacao')
-            .from('plano_trabalho as p')
-            .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
-            .where('p.plano_trabalho_id',params.id)
+                .connection('pg')
+                .query()
+                .select('p.*', 's.descricao as situacao')
+                .from('plano_trabalho as p')
+                .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
+                .where('p.plano_trabalho_id', params.id)
 
             return plano
         } catch (error) {
             console.log(error);
-            
+
         }
     }
-    
-    public async updatePlanoTrabalho({ request, response }){
+
+    public async updatePlanoTrabalho({ request, response }) {
 
         const { plano_trabalho_id
             , nome_plano_trabalho
@@ -51,34 +51,34 @@ export default class PlanoTrabalhoController {
         try {
 
             const rsPlano = await Database
-            .connection('pg')
-            .query()
-            .from('plano_trabalho as p')
-            .where('p.plano_trabalho_id',plano_trabalho_id)
+                .connection('pg')
+                .query()
+                .from('plano_trabalho as p')
+                .where('p.plano_trabalho_id', plano_trabalho_id)
 
 
             await Database
-            .connection('pg')
-            .from('plano_trabalho')
-            .where('plano_trabalho_id', plano_trabalho_id)
-            .update({
-                nome_plano_trabalho: nome_plano_trabalho ? nome_plano_trabalho : rsPlano[0].nome_plano_trabalho,
-                plano_entrega_id: plano_entrega_id ? plano_entrega_id : rsPlano[0].plano_entrega_id,
-                data_inicio: data_inicio ? data_inicio : rsPlano[0].data_inicio,
-                data_fim: data_fim ? data_fim : rsPlano[0].data_fim,
-                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas ? percentual_atividade_nao_vinculadas : rsPlano[0].percentual_atividade_nao_vinculadas,
-                situacao_id: situacao_id ? situacao_id : rsPlano[0].situacao_id
-            })
+                .connection('pg')
+                .from('plano_trabalho')
+                .where('plano_trabalho_id', plano_trabalho_id)
+                .update({
+                    nome_plano_trabalho: nome_plano_trabalho ? nome_plano_trabalho : rsPlano[0].nome_plano_trabalho,
+                    plano_entrega_id: plano_entrega_id ? plano_entrega_id : rsPlano[0].plano_entrega_id,
+                    data_inicio: data_inicio ? data_inicio : rsPlano[0].data_inicio,
+                    data_fim: data_fim ? data_fim : rsPlano[0].data_fim,
+                    percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas ? percentual_atividade_nao_vinculadas : rsPlano[0].percentual_atividade_nao_vinculadas,
+                    situacao_id: situacao_id ? situacao_id : rsPlano[0].situacao_id
+                })
 
             return response.status(200).send('Atualização realizada com sucesso!')
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
 
-    public async createPlanoTrabalho({ request }) {
+    public async createPlanoTrabalho({ request, response }) {
         const { nome_plano_trabalho
             , plano_entrega_id
             , data_inicio
@@ -88,41 +88,79 @@ export default class PlanoTrabalhoController {
             , situacao_id } = request.all()
         try {
 
+            if (!nome_plano_trabalho) {
+                throw response.status(400).send("O campo nome plano de trabalho é obrigatório!")
+            }
 
-            
-            const plano = await Database
-            .connection('pg')
-            .insertQuery()
-            .table('plano_trabalho')
-            .insert({
-                nome_plano_trabalho: nome_plano_trabalho,
-                plano_entrega_id: plano_entrega_id,
-                data_inicio: data_inicio,
-                data_fim: data_fim,
-                servidor_id: servidor_id,
-                percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
-                situacao_id: situacao_id
-            })
-           
-            return plano
+            if (!plano_entrega_id) {
+                throw response.status(400).send("O campo plano entrega é obrigatório!")
+            }
+
+            if (!data_inicio) {
+                throw response.status(400).send("O campo data de inicio é obrigatório!")
+            }
+
+            if (!servidor_id) {
+                throw response.status(400).send("O campo servidor é obrigatório!")
+            }
+
+            const pt = await Database
+                .connection('pg')
+                .query()
+                .from('plano_trabalho as p')
+                .where('p.plano_entrega_id', plano_entrega_id)
+                .where('p.servidor_id', servidor_id)
+                .whereIn('p.situacao_id',[1,3])
+                .orderBy('p.plano_trabalho_id','desc')
+
+            if (!pt[0]) {
+                throw response.status(400).send('Já existe um plano de trabalho cadastrado ativo ou em analise para o servidor!')
+            }
+
+
+            const participante = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.plano_entrega_id', plano_entrega_id)
+
+            if (!participante[0]) {
+                throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
+            }
+
+            await Database
+                .connection('pg')
+                .insertQuery()
+                .table('plano_trabalho')
+                .insert({
+                    nome_plano_trabalho: nome_plano_trabalho,
+                    plano_entrega_id: plano_entrega_id,
+                    data_inicio: data_inicio,
+                    data_fim: data_fim,
+                    servidor_id: servidor_id,
+                    percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
+                    situacao_id: situacao_id
+                })
+
+            return response.send('Plano de trabalho criado com sucesso!')
         } catch (error) {
-            
+
             console.log(error);
-            return error 
+            return error
 
         }
 
 
     }
 
-    public async destroy({ params }){
+    public async destroy({ params }) {
         try {
-            const plano = await Plano.findByOrFail('plano_trabalho_id',params.id)
+            const plano = await Plano.findByOrFail('plano_trabalho_id', params.id)
             await plano.delete()
-            return "O Plano "+plano.nome_plano_trabalho+" foi remvido definitivamente"
+            return "O Plano " + plano.nome_plano_trabalho + " foi remvido definitivamente"
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 }

@@ -4,7 +4,12 @@ import Database from "@ioc:Adonis/Lucid/Database"
 
 export default class ParticipantesController {
     public async createParticipante({ request, response }) {
-        const { servidor_id, unidade_id, data_inicio_participacao, data_fim_participacao, modalidade_id } = request.all()
+        const { participante_id, servidor_id, unidade_id, data_inicio_participacao, modalidade_id, plano_entrega_id } = request.all()
+
+        if(participante_id){
+            return this.updateParticipante({request, response})            
+        }
+        
         try {
             await Database
                 .connection('pg')
@@ -13,9 +18,9 @@ export default class ParticipantesController {
                     servidor_id: servidor_id,
                     unidade_id: unidade_id,
                     data_inicio_participacao: data_inicio_participacao,
-                    data_fim_participacao: data_fim_participacao,
                     situacao: true,
                     modalidade_id: modalidade_id,
+                    plano_entrega_id: plano_entrega_id 
                 })
 
             return response.send('Participante cadastrado com sucesso!')
@@ -26,9 +31,8 @@ export default class ParticipantesController {
     }
 
 
-    public async updateParticipante({ request, response }) {
-
-
+    public async updateParticipante({ request, response }) {        
+        
         const { data_inicio_participacao, data_fim_participacao, modalidade_id, participante_id, sistema_externo, situacao } = request.all()
         try {
 
@@ -50,14 +54,28 @@ export default class ParticipantesController {
                 .update({
                     data_inicio_participacao: data_inicio_participacao ? data_inicio_participacao : rsParticipante[0].data_inicio_participacao,
                     data_fim_participacao: data_fim_participacao ? data_fim_participacao : rsParticipante[0].data_fim_participacao,
-                    situacao: situacao ? situacao : rsParticipante[0].situacao,
+                    situacao: situacao == true ? situacao : false,
                     modalidade_id: modalidade_id ? modalidade_id : rsParticipante[0].modalidade_id,
-                    sistema_externo: sistema_externo ? sistema_externo : rsParticipante[0].sistema_externo
+                    sistema_externo: sistema_externo == true ? sistema_externo : false
                 })
 
             return response.status(200).send('Atualização realizada com sucesso!')
         } catch (error) {
             return error
+        }
+    }
+
+    public async destroy({ params }) {
+        try {
+            await Database
+                .connection('pg')
+                .from('participante')
+                .where('participante_id', params.id)
+                .delete()
+            return "Partcipante removido com sucesso!"
+        } catch (error) {
+            console.log(error);
+
         }
     }
 }

@@ -34,7 +34,7 @@ export default class ServidoresController {
         try {
             const rsServidores = await Database
                 .query()
-                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade', 's.siape', 'un.nome as lotacao')
+                .select('s.id_servidor', 'p.nome as nome_pessoa', 's.id_unidade', 's.siape', 'un.nome as lotacao')
                 .from('rh.servidor as s')
                 .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
                 .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
@@ -50,11 +50,17 @@ export default class ServidoresController {
                 .from('participante as p')
                 .where('p.servidor_id', servidor.id_servidor)
                 .where('p.unidade_id', servidor.id_unidade)
+                .where('p.situacao', true)
+                .orderBy('p.participante_id', 'desc')
 
                
                 const rsServidor = {
                     ...servidor,
-                    situacao: rs[0]?.situacao == true ? true : false
+                    situacao: rs[0]?.situacao == true ? true : false,
+                    data_inicio_participacao: rs[0]?.data_inicio_participacao ? rs[0]?.data_inicio_participacao : null,
+                    data_fim_participacao: rs[0]?.data_fim_participacao ? rs[0]?.data_fim_participacao : null,
+                    participante_id: rs[0]?.participante_id ? rs[0]?.participante_id : null
+
                 }
 
                 
@@ -107,7 +113,7 @@ export default class ServidoresController {
                 })
                 const us = hu.split('.')
                 console.log(us.length -1);
-                const n = us.length -3
+                //const n = us.length -3
             return hu
         } catch (error) {
             console.log(error);            

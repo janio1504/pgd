@@ -1,16 +1,22 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Situacao extends BaseModel {
-  @column({ isPrimary: true })
-  public id: number
 
-  @column()
-  public descricao: string
-
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+export default class Situacao {
+  public static situacao(id) {
+    let situacao = ''
+    switch (id) {
+      case 1:
+        situacao ="Homologado"
+        break;
+      case 2:
+        situacao ="Indeferido"
+        break;
+      case 3:
+        situacao ="Em analise"
+        break;
+      default:
+        break;
+    }
+  
+    return situacao
+  }
 }
