@@ -4,13 +4,22 @@ import Database from "@ioc:Adonis/Lucid/Database"
 
 export default class ParticipantesController {
     public async createParticipante({ request, response }) {
-        const { participante_id, servidor_id, unidade_id, data_inicio_participacao, modalidade_id, plano_entrega_id } = request.all()
+        const { servidor_id, unidade_id, data_inicio_participacao, modalidade_id, plano_entrega_id } = request.all()
 
-        if (participante_id) {
-            return this.updateParticipante({ request, response })
-        }
 
         try {
+
+            const rsParticipante = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.servidor_id', servidor_id)
+                .where('p.situacao', true)
+
+            if (rsParticipante[0]) {
+                throw response.status(400).send("Já existe cadastrado de participante ativo para o servidor!")
+            }
+
             await Database
                 .connection('pg')
                 .table('participante')
@@ -32,7 +41,7 @@ export default class ParticipantesController {
 
     public async getParticipantesUnidade({ params, response }) {
         try {
-            if(!params.id){
+            if (!params.id) {
                 throw response.status(400).send("O campo unidade é obrigatório!")
             }
             const rsParticipantes = await Database
@@ -93,6 +102,38 @@ export default class ParticipantesController {
                     situacao: situacao == true ? situacao : false,
                     modalidade_id: modalidade_id ? modalidade_id : rsParticipante[0].modalidade_id,
                     sistema_externo: sistema_externo == true ? sistema_externo : false
+                })
+
+            return response.status(200).send('Atualização realizada com sucesso!')
+        } catch (error) {
+            return error
+        }
+    }
+
+    public async removerParticipante({ request, response }) {
+
+        const { participante_id } = request.all()
+        try {
+
+            const rsParticipante = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.participante_id', participante_id)
+                .where('p.situacao', true)
+
+            if (!rsParticipante[0]) {
+                throw response.status(400).send("Participante não encontrado ou não cadastrado.")
+            }
+
+            await Database
+                .connection('pg')
+                .from('participante as p')
+                .where('p.participante_id', participante_id)
+                .update({
+                    data_fim_participacao: new Date().toLocaleDateString('en-us'),
+                    situacao: false,
+
                 })
 
             return response.status(200).send('Atualização realizada com sucesso!')

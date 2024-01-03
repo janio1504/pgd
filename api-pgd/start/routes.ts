@@ -58,8 +58,9 @@ Route.group(() => {
 
     Route.post('/create-participante', 'ParticipantesController.createParticipante')
     Route.post('/update-participante', 'ParticipantesController.updateParticipante')
+    Route.post('/remover-participante/:id', 'ParticipantesController.removerpartcipante')
     Route.get('/get-participantes-unidade/:id', 'ParticipantesController.getParticipantesUnidade')
-    Route.get('/get-participante/:id', 'ParticipantesController.getParticipante')
+    Route.get('/get-participante/:id', 'ParticipantesController.getParticipante')    
     Route.delete('/delete-participante/:id', 'ParticipantesController.destroy')
 
    
