@@ -9,6 +9,8 @@ export default class AtividadesController {
         try {
             const atividades = await Database
             .connection('pg')
+            .query()
+            .select('a.*','mpe.titulo as titulo_meta')
             .from('atividades as a')
             .leftJoin('meta_plano_entrega as mpe', 'a.meta_plano_entrega_id', 'mpe.meta_plano_entrega_id')
             .where('a.plano_trabalho_id',params.id)
