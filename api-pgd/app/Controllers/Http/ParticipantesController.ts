@@ -49,6 +49,7 @@ export default class ParticipantesController {
                 .query()
                 .from('participante as p')
                 .where('p.unidade_id', params.id)
+                .where('p.situacao', true)
 
             const participantes = rsParticipantes.map(async participante => {
 
@@ -115,6 +116,10 @@ export default class ParticipantesController {
         const { participante_id } = request.all()
         try {
 
+            if (!participante_id) {
+                throw response.status(400).send("É obrigatório selecionar um participante.")
+            }
+
             const rsParticipante = await Database
                 .connection('pg')
                 .query()
@@ -136,7 +141,7 @@ export default class ParticipantesController {
 
                 })
 
-            return response.status(200).send('Atualização realizada com sucesso!')
+            return response.status(200).send('A remoção do servidor do plano de entrega foi realizada com sucesso!')
         } catch (error) {
             return error
         }

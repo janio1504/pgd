@@ -5,18 +5,21 @@ export default class Situacao {
     let situacao = ''
     switch (id) {
       case 1:
-        situacao ="Homologado"
+        situacao = "Homologado"
         break;
       case 2:
-        situacao ="Indeferido"
+        situacao = "Em analise"
         break;
       case 3:
-        situacao ="Em analise"
+        situacao = "Indeferido"
+        break;
+      case 4:
+        situacao = "Cadastrado"
         break;
       default:
         break;
     }
-  
+
     return situacao
   }
 }
