@@ -89,7 +89,7 @@ export default class PlanoEntregaController {
                 throw response.status(400).send("Não foi encontrado plano de entrega homologado para a unidade!")
             }
 
-            const planosEntrega = planos.map(async plano => {
+            const planosEntrega = await Promise.all(planos.map(async plano => {
 
                 const metas = await Database
                     .connection('pg')
@@ -102,9 +102,9 @@ export default class PlanoEntregaController {
                     .query()
                     .from('participante as p')
                     .where('p.plano_entrega_id', plano.plano_entrega_id)
-                    .where('p.situacao', true)
-
-                const participantes = rsParticipantes.map(async participante => {
+                
+                
+                const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
 
                     const rsServidor = await Database
@@ -114,14 +114,19 @@ export default class PlanoEntregaController {
                         .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
                         .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
                         .where('s.id_servidor', participante.servidor_id)
+                        .whereNull('s.data_desligamento')
 
+                        
                     const rs = {
-                        ...participante,
-                        ...rsServidor[0]
+                        participante_id: participante.participante_id,
+                        ...rsServidor[0],
+                        modalidade: Situacao.modalidade(participante.modalidade_id)
                     }
 
                     return rs
-                })
+                }))
+
+               
 
                 const planoEntrega = {
                     ...plano,
@@ -131,9 +136,9 @@ export default class PlanoEntregaController {
                 }
 
                 return planoEntrega
-            })
+            }))
 
-            return Promise.all(planosEntrega)
+            return planosEntrega
         } catch (error) {
             console.log(error);
 

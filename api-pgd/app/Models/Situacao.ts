@@ -22,4 +22,23 @@ export default class Situacao {
 
     return situacao
   }
+
+  public static modalidade(id) {
+    let modalidade = ''
+    switch (id) {
+      case 1:
+        modalidade = "Integral"
+        break;
+      case 2:
+        modalidade = "Parcial"
+        break;
+      case 3:
+        modalidade = "Presencial"
+        break;     
+      default:
+        break;
+    }
+
+    return modalidade
+  }
 }
