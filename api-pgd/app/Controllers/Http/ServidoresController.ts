@@ -97,26 +97,5 @@ export default class ServidoresController {
         }
     }
 
-    public async hierarquiaUnidade() {
-        try {
-            const hierarquia = await Database
-                .from('comum.unidade as u')
-                .select('u.hierarquia')
-                .where('u.id_unidade', 2966)
-
-                let hu = ''
-
-                hierarquia.map(hierarquia=>{
-                    hu = hierarquia.hierarquia
-                    
-                    
-                })
-                const us = hu.split('.')
-                console.log(us.length -1);
-                //const n = us.length -3
-            return hu
-        } catch (error) {
-            console.log(error);            
-        }
-    }
+   
 }
