@@ -6,10 +6,10 @@ export default class ParticipantesController {
     public async createParticipante({ request, response }) {
         const { participante_id, servidor_id, unidade_id, data_inicio_participacao, modalidade_id, plano_entrega_id } = request.all()
 
-        if(participante_id){
-            return this.updateParticipante({request, response})            
+        if (participante_id) {
+            return this.updateParticipante({ request, response })
         }
-        
+
         try {
             await Database
                 .connection('pg')
@@ -20,7 +20,7 @@ export default class ParticipantesController {
                     data_inicio_participacao: data_inicio_participacao,
                     situacao: true,
                     modalidade_id: modalidade_id,
-                    plano_entrega_id: plano_entrega_id 
+                    plano_entrega_id: plano_entrega_id
                 })
 
             return response.send('Participante cadastrado com sucesso!')
@@ -30,9 +30,45 @@ export default class ParticipantesController {
         }
     }
 
+    public async getParticipantesUnidade({ params, response }) {
+        try {
+            if(!params.id){
+                throw response.status(400).send("O campo unidade é obrigatório!")
+            }
+            const rsParticipantes = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.unidade_id', params.id)
 
-    public async updateParticipante({ request, response }) {        
-        
+            const participantes = rsParticipantes.map(async participante => {
+
+
+                const rsServidor = await Database
+                    .query()
+                    .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
+                    .from('rh.servidor as s')
+                    .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
+                    .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
+                    .where('s.id_servidor', participante.servidor_id)
+
+                const rs = {
+                    ...participante,
+                    ...rsServidor[0]
+                }
+
+                return rs
+            })
+            return await Promise.all(participantes)
+
+        } catch (error) {
+            return error
+        }
+    }
+
+
+    public async updateParticipante({ request, response }) {
+
         const { data_inicio_participacao, data_fim_participacao, modalidade_id, participante_id, sistema_externo, situacao } = request.all()
         try {
 
@@ -46,7 +82,7 @@ export default class ParticipantesController {
             if (!rsParticipante[0]) {
                 throw response.status(400).send("Participante não encontrado ou não cadastrado")
             }
-            
+
             await Database
                 .connection('pg')
                 .from('participante as p')
