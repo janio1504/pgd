@@ -12,7 +12,7 @@ export default class PlanoEntregaController {
             .connection('pg')
             .query()
             .from('plano_entregas as p')
-            .leftJoin('homologacao_plano_entrega as h', 'p.plano_entrega_id', 'h.plano_entrega_id')
+            //.leftJoin('homologacao_plano_entrega as h', 'p.plano_entrega_id', 'h.plano_entrega_id')
             .where('p.unidade_id', params.id)
             //.whereIn('h.situacao_id', [1,2,3,4])
             .orderBy('p.plano_entrega_id', "desc")
