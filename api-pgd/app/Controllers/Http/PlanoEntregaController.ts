@@ -17,7 +17,7 @@ export default class PlanoEntregaController {
             //.whereIn('h.situacao_id', [1,2,3,4])
             .orderBy('p.plano_entrega_id', "desc")
 
-            if(planos.length == 0){
+            if(planos.length < 0){
                 throw response.status(400).send("Não foi encontrado plano de entrega homologado para a unidade!")
             }
 
