@@ -50,14 +50,14 @@ export default class HomologacoesController {
 
             const servidor = await Database
                 .query()
-                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
+                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade', 's.siape', 'un.nome as lotacao')
                 .from('rh.servidor as s')
                 .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
                 .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
                 .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
                 .where('u.id_usuario', auth.user.id)
 
-            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade)
 
             if (!isChefe) {
                 return
