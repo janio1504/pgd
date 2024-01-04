@@ -88,11 +88,12 @@ export default class HomologacoesController {
             if (!isChefe) {
                 return
             }
-
+            
+            
             const psh = await Database
                 .connection('pg')
                 .from('plano_entregas as p')
-                .where('p.unidade_superior_id', servidor[0].id_unidade)
+                .where('p.unidade_superior_id', servidor[0].id_unidade_lotacao)
                 .whereIn('p.situacao_id', [1, 2, 4])
             
 
@@ -105,7 +106,7 @@ export default class HomologacoesController {
                 const situacao = Situacao.situacao(plano.situacao_id)
 
                 const rs = {
-                    homologacao_plano_entrega_id: plano.homologacao_plano_entrega_id,
+                    plano_entrega_id: plano.plano_entrega_id,
                     nome_unidade: unidade[0].nome,
                     situacao: situacao,
                     observacao: plano.observacao
