@@ -107,6 +107,7 @@ export default class HomologacoesController {
 
                 const rs = {
                     plano_entrega_id: plano.plano_entrega_id,
+                    nome_plano_entrega: plano.nome_plano_entrega,
                     nome_unidade: unidade[0].nome,
                     situacao: situacao,
                     observacao: plano.observacao
