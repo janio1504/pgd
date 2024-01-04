@@ -105,7 +105,7 @@ export default class HomologacoesController {
                 .connection('pg')
                 .from('plano_entregas as p')
                 .where('p.unidade_superior_id', servidor[0].id_unidade_lotacao)
-                .whereIn('p.situacao_id', [1, 2, 4])
+                .whereIn('p.situacao_id', [2, 3, 4])
 
 
             const planos = psh.map(async plano => {

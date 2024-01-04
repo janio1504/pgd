@@ -76,7 +76,7 @@ export default class ServidoresController {
         }
     }
 
-    public async isChefe(id_servidor, id_unidade_lotacao) {
+    public async isChefe(id_servidor, id_unidade) {
         try {
 
             const isChefe = await Database
@@ -84,7 +84,7 @@ export default class ServidoresController {
                 .from('rh.servidor as s')
                 .join('comum.responsavel_unidade as ru', 's.id_servidor', 'ru.id_servidor')
                 .where('s.id_servidor', id_servidor)
-                .where('ru.id_unidade', id_unidade_lotacao)
+                .where('ru.id_unidade', id_unidade)
                 .whereNull('s.data_desligamento')
                 .whereNull('ru.data_fim')
                 .whereIn('ru.nivel_responsabilidade', ['C', 'V'])
