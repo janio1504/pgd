@@ -64,7 +64,7 @@ Route.group(() => {
     Route.delete('/delete-participante/:id', 'ParticipantesController.destroy')
 
     Route.post('/create-homologacao-plano-entrega', 'HomologacoesController.createHomologacao')
-    Route.post('/get-pe-para-homologar', 'HomologacoesController.getPlanosParaHomologar')
+    Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosParaHomologar')
     Route.post('/homologar-plano-entrega', 'HomologacoesController.homologarPlanoEntrega')
     
 
