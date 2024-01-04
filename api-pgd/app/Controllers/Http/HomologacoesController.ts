@@ -7,7 +7,7 @@ export default class HomologacoesController {
 
     public async createHomologacao({ request, response }) {
         const { plano_entrega_id } = request.all()
-        
+
         try {
 
             if (!plano_entrega_id) {
@@ -28,7 +28,7 @@ export default class HomologacoesController {
                 .from('plano_entregas')
                 .update({
                     unidade_superior_id: unidade_superior_id,
-                    situacao_id: 4
+                    situacao_id: 2
                 })
 
             return response.send('O plano foi enviado para homologação.')
