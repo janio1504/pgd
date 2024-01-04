@@ -19,7 +19,7 @@ export default class HomologacoesController {
                 .from('plano_entregas as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
 
-            
+
             const unidade_superior_id = await this.unidadeSuperior(pe[0].unidade_id)
 
 
@@ -64,15 +64,17 @@ export default class HomologacoesController {
             return response.send('Homologação realizada com sucesso!')
         } catch (error) {
             console.log(error);
-            
+
             return error
         }
 
     }
 
-    public async getPlanosParaHomologar({ request, response }) {
+    public async getPlanosParaHomologar({ request, response, auth }) {
         const { unidade_id, servidor_id } = request.all()
         try {
+
+
 
             if (!unidade_id) {
                 throw response.status(400).send('O campo unidade superior é obrigatório!')
@@ -82,18 +84,27 @@ export default class HomologacoesController {
                 throw response.status(400).send('O campo servidor é obrigatório!')
             }
 
-            const isChefe = await this.isChefe(servidor_id, unidade_id)
+            const servidor = await Database
+                .query()
+                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
+                .from('rh.servidor as s')
+                .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
+                .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
+                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
+                .where('u.id_usuario', auth.user.id)
 
+            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+          
             if (!isChefe) {
-                throw response.status(400).send('O servidor não é chefe da unidade!')
+                return
             }
-            
+
             const psh = await Database
-                .connection('pg')                
+                .connection('pg')
                 .from('plano_entregas as p')
-                .where('p.unidade_superior_id', unidade_id)
+                .where('p.unidade_superior_id', servidor[0].id_unidade)
                 .whereIn('p.situacao_id', [1, 2, 4])
-            
+
             const planos = psh.map(async plano => {
 
                 const unidade = await Database
