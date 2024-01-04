@@ -25,7 +25,8 @@ export default class HomologacoesController {
 
             await Database
                 .connection('pg')
-                .from('plano_entregas')
+                .from('plano_entregas as p')
+                .where('p.plano_entrega_id', plano_entrega_id)
                 .update({
                     unidade_superior_id: unidade_superior_id,
                     situacao_id: 2
@@ -70,10 +71,10 @@ export default class HomologacoesController {
     }
 
     public async getPlanosParaHomologar({ request, response }) {
-        const { unidade_superior_id, servidor_id } = request.all()
+        const { unidade_id, servidor_id } = request.all()
         try {
 
-            if (!unidade_superior_id) {
+            if (!unidade_id) {
                 throw response.status(400).send('O campo unidade superior é obrigatório!')
             }
 
@@ -81,7 +82,7 @@ export default class HomologacoesController {
                 throw response.status(400).send('O campo servidor é obrigatório!')
             }
 
-            const isChefe = await this.isChefe(servidor_id, unidade_superior_id)
+            const isChefe = await this.isChefe(servidor_id, unidade_id)
 
             if (!isChefe) {
                 throw response.status(400).send('O servidor não é chefe da unidade!')
@@ -90,7 +91,7 @@ export default class HomologacoesController {
             const psh = await Database
                 .connection('pg')                
                 .from('plano_entregas as p')
-                .where('p.unidade_superior_id', unidade_superior_id)
+                .where('p.unidade_superior_id', unidade_id)
                 .whereIn('p.situacao_id', [1, 2, 4])
             
             const planos = psh.map(async plano => {

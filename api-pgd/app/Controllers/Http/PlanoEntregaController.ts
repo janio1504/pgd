@@ -132,6 +132,7 @@ export default class PlanoEntregaController {
                 unidade_id: unidade_id,
                 data_inicio: data_inicio,
                 data_fim: data_fim,
+                situacao_id: 4
             })
            
             return plano
