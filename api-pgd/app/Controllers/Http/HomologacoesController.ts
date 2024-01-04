@@ -41,16 +41,28 @@ export default class HomologacoesController {
     }
 
 
-    public async homologarPlanoEntrega({ request, response }) {
-        const { plano_entrega_id, servidor_id } = request.all()
+    public async homologarPlanoEntrega({ request, response, auth }) {
+        const { plano_entrega_id } = request.all()
         try {
             if (!plano_entrega_id) {
                 throw response.status(400).send('O campo homologacao_plano_entrega_id é obrigatório.')
             }
 
-            if (!servidor_id) {
-                throw response.status(400).send('Nenhum servidor relacionado para a homologação.')
-            }
+            const servidor = await Database
+            .query()
+            .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
+            .from('rh.servidor as s')
+            .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
+            .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
+            .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
+            .where('u.id_usuario', auth.user.id)
+
+        const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+      
+        if (!isChefe) {
+            return
+        }
+        
 
             await Database
                 .connection('pg')
@@ -59,7 +71,7 @@ export default class HomologacoesController {
                 .update({
                     situacao_id: 1,
                     data_homologacao: new Date().toLocaleDateString('pt-br', { timeZone: 'America/Belem' }),
-                    servidor_id: servidor_id
+                    servidor_id: servidor[0].servidor_id
                 })
             return response.send('Homologação realizada com sucesso!')
         } catch (error) {
