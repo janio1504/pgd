@@ -136,7 +136,7 @@ export default class PlanoEntregaController {
            
             return plano
         } catch (error) {
-            
+            return error
             throw response.status(400).send("Erro ao cadastro o plano de entrega procure o adm do sistema!");
 
         }
