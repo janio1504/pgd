@@ -70,19 +70,9 @@ export default class HomologacoesController {
 
     }
 
-    public async getPlanosParaHomologar({ request, response, auth }) {
-        const { unidade_id, servidor_id } = request.all()
+    public async getPlanosParaHomologar({ auth }) {
         try {
 
-
-
-            if (!unidade_id) {
-                throw response.status(400).send('O campo unidade superior é obrigatório!')
-            }
-
-            if (!servidor_id) {
-                throw response.status(400).send('O campo servidor é obrigatório!')
-            }
 
             const servidor = await Database
                 .query()
@@ -104,6 +94,7 @@ export default class HomologacoesController {
                 .from('plano_entregas as p')
                 .where('p.unidade_superior_id', servidor[0].id_unidade)
                 .whereIn('p.situacao_id', [1, 2, 4])
+            
 
             const planos = psh.map(async plano => {
 
