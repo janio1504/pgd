@@ -12,9 +12,7 @@ export default class PlanoEntregaController {
             .connection('pg')
             .query()
             .from('plano_entregas as p')
-            //.leftJoin('homologacao_plano_entrega as h', 'p.plano_entrega_id', 'h.plano_entrega_id')
             .where('p.unidade_id', params.id)
-            //.whereIn('h.situacao_id', [1,2,3,4])
             .orderBy('p.plano_entrega_id', "desc")
 
             if(planos.length < 0){
@@ -45,7 +43,6 @@ export default class PlanoEntregaController {
             .query()
             .from('plano_entregas as p')
             .where('p.plano_entrega_id',params.id)
-            .innerJoin('homologacao_plano_entrega as h', 'p.plano_entrega_id', 'h.plano_entrega_id')
 
             const planoEntrega = plano.map(plano=>{
                 const pe = {
@@ -119,7 +116,6 @@ export default class PlanoEntregaController {
             .query()
             .from('plano_entregas as p')
             .where('p.unidade_id', unidade_id)
-            .innerJoin('homologacao_plano_entrega as h', 'p.plano_entrega_id', 'h.plano_entrega_id')
             .whereIn('p.situacao_id', [1,2,4])
             .orderBy('p.plano_entrega_id', 'desc')
 
