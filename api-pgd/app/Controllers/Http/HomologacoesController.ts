@@ -49,20 +49,19 @@ export default class HomologacoesController {
             }
 
             const servidor = await Database
-            .query()
-            .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
-            .from('rh.servidor as s')
-            .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-            .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
-            .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-            .where('u.id_usuario', auth.user.id)
+                .query()
+                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
+                .from('rh.servidor as s')
+                .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
+                .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
+                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
+                .where('u.id_usuario', auth.user.id)
 
-        const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
-      
-        if (!isChefe) {
-            return
-        }
-        
+            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+
+            if (!isChefe) {
+                return
+            }
 
             await Database
                 .connection('pg')
@@ -96,18 +95,18 @@ export default class HomologacoesController {
                 .where('u.id_usuario', auth.user.id)
 
             const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
-          
+
             if (!isChefe) {
                 return
             }
-            
-            
+
+
             const psh = await Database
                 .connection('pg')
                 .from('plano_entregas as p')
                 .where('p.unidade_superior_id', servidor[0].id_unidade_lotacao)
                 .whereIn('p.situacao_id', [1, 2, 4])
-            
+
 
             const planos = psh.map(async plano => {
 
