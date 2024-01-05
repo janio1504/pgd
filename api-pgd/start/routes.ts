@@ -36,6 +36,7 @@ Route.group(() => {
     Route.post('/update-plano-entrega', 'PlanoEntregaController.updatePlanoEntrega')
     Route.get('/get-planos-entrega/:id', 'PlanoEntregaController.getPlanosDeEntrega')
     Route.get('/get-plano-entrega/:id', 'PlanoEntregaController.getPlanoDeEntrega')
+    Route.get('/get-pe-homologado-unidade/:id', 'PlanoEntregaController.getPlanoEntregaUnidadeHomologado')
     Route.delete('/delete-plano-entrega/:id', 'PlanoEntregaController.destroy')
 
     Route.post('/create-meta-plano-entrega', 'MetasController.createMeta')
@@ -64,8 +65,7 @@ Route.group(() => {
     Route.delete('/delete-participante/:id', 'ParticipantesController.destroy')
 
     Route.post('/create-homologacao-plano-entrega', 'HomologacoesController.createHomologacaoPlanoEntrega')
-    Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosDeEntrgeParaHomologar')
-    Route.get('/get-pe-homologado-unidade/:id', 'HomologacoesController.getPlanoEntregaUnidadeHomologado')
+    Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosDeEntrgeParaHomologar')    
     Route.post('/homologar-plano-entrega', 'HomologacoesController.homologarPlanoEntrega')
     
 
