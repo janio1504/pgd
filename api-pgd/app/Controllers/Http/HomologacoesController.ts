@@ -5,7 +5,7 @@ import Situacao from "App/Models/Situacao"
 
 export default class HomologacoesController {
 
-    public async createHomologacao({ request, response }) {
+    public async createHomologacaoPlanoEntrega({ request, response }) {
         const { plano_entrega_id } = request.all()
 
         try {
@@ -81,7 +81,7 @@ export default class HomologacoesController {
 
     }
 
-    public async getPlanosParaHomologar({ auth }) {
+    public async getPlanosDeEntrgeParaHomologar({ auth }) {
         try {
 
 
@@ -116,12 +116,13 @@ export default class HomologacoesController {
 
                 const situacao = Situacao.situacao(plano.situacao_id)
 
+          
                 const rs = {
                     plano_entrega_id: plano.plano_entrega_id,
                     nome_plano_entrega: plano.nome_plano_entrega,
                     nome_unidade: unidade[0].nome,
                     situacao: situacao,
-                    observacao: plano.observacao
+                    observacao: plano.observacao,
                 }
 
                 return rs

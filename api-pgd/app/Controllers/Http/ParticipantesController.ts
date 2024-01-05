@@ -17,7 +17,7 @@ export default class ParticipantesController {
                 .where('p.situacao', true)
 
             if (rsParticipante[0]) {
-                throw response.status(400).send("Já existe cadastrado de participante ativo para o servidor!")
+                throw response.status(400).send("O servidor já é participante do plano de entrega!")
             }
 
             await Database
