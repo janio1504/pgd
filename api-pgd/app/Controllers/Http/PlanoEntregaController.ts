@@ -82,6 +82,7 @@ export default class PlanoEntregaController {
                 .query()
                 .from('plano_entregas as p')
                 .where('p.unidade_id', params.id)
+                .where('p.situacao_id', 1)
                 .orderBy('p.plano_entrega_id', "desc")
 
             if (planos.length < 0) {
