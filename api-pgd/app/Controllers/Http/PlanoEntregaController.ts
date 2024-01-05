@@ -100,7 +100,7 @@ export default class PlanoEntregaController {
                     .connection('pg')
                     .query()
                     .from('participante as p')
-                    .where('p.plano_entrega_id', params.id)
+                    .where('p.plano_entrega_id', plano.plano_entrega_id)
                     .where('p.situacao', true)
 
                 const participantes = rsParticipantes.map(async participante => {
