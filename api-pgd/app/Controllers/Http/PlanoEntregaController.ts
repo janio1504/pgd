@@ -102,8 +102,8 @@ export default class PlanoEntregaController {
                     .query()
                     .from('participante as p')
                     .where('p.plano_entrega_id', plano.plano_entrega_id)
-                
-                
+
+
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
 
@@ -116,7 +116,7 @@ export default class PlanoEntregaController {
                         .where('s.id_servidor', participante.servidor_id)
                         .whereNull('s.data_desligamento')
 
-                        
+
                     const rs = {
                         participante_id: participante.participante_id,
                         ...rsServidor[0],
@@ -126,7 +126,7 @@ export default class PlanoEntregaController {
                     return rs
                 }))
 
-               
+
 
                 const planoEntrega = {
                     ...plano,
@@ -155,7 +155,7 @@ export default class PlanoEntregaController {
                 .query()
                 .from('plano_entregas as p')
                 .where('p.unidade_id', params.id)
-                .whereIn('p.situacao_id', [2,3,4])
+                .whereIn('p.situacao_id', [2, 3, 4])
                 .orderBy('p.plano_entrega_id', "desc")
 
             if (planos.length < 0) {
@@ -175,8 +175,15 @@ export default class PlanoEntregaController {
                     .query()
                     .from('participante as p')
                     .where('p.plano_entrega_id', plano.plano_entrega_id)
-                
-                
+
+
+                const rsUnidade = await Database
+                    .query()
+                    .select('u.nome as unidade')
+                    .from('comum.unidade as u')
+                    .where('u.id_unidade', plano.unidade_id)
+
+
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
 
@@ -189,7 +196,8 @@ export default class PlanoEntregaController {
                         .where('s.id_servidor', participante.servidor_id)
                         .whereNull('s.data_desligamento')
 
-                        
+                    console.log(rsServidor);
+
                     const rs = {
                         participante_id: participante.participante_id,
                         ...rsServidor[0],
@@ -199,13 +207,14 @@ export default class PlanoEntregaController {
                     return rs
                 }))
 
-               
+
 
                 const planoEntrega = {
                     ...plano,
                     situacao: Situacao.situacao(plano.situacao_id),
                     metas_plano_entrega: metas,
-                    participantes: participantes
+                    participantes: participantes,
+                    ...rsUnidade[0]
                 }
 
                 return planoEntrega
