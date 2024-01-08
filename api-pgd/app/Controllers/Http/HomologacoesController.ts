@@ -81,7 +81,7 @@ export default class HomologacoesController {
 
     }
 
-    public async getPlanosDeEntrgeParaHomologar({ auth }) {
+    public async getPlanosDeEntregaParaHomologar({ auth }) {
         try {
 
 
