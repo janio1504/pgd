@@ -81,10 +81,13 @@ export default class PlanoEntregaController {
                     return rs
                 }))
 
-
+                const unidade = await Database
+                    .from('comum.unidade as u')
+                    .where('u.id_unidade', plano.unidade_id)
 
                 const planoEntrega = {
                     ...plano,
+                    nome_unidade: unidade[0].nome,
                     situacao: Situacao.situacao(plano.situacao_id),
                     metas_plano_entrega: metas,
                     participantes: participantes
