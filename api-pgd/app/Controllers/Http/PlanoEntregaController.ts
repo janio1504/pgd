@@ -104,14 +104,17 @@ export default class PlanoEntregaController {
     }
 
 
-    public async getPlanoEntregaUnidadeHomologado({ params, response }) {
+    public async getPlanoEntregaUnidadeHomologado({ auth, response }) {
 
         try {
+
+            const rsServidor = await Servidor.servidor(auth.user.id)
+
             const planos = await Database
                 .connection('pg')
                 .query()
                 .from('plano_entregas as p')
-                .where('p.unidade_id', params.id)
+                .where('p.unidade_id', rsServidor[0].id_unidade)
                 .where('p.situacao_id', 1)
                 .orderBy('p.plano_entrega_id', "desc")
 
@@ -136,7 +139,7 @@ export default class PlanoEntregaController {
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
-                    const rsServidor = await Servidor.servidor(participante.servidor_id)
+                    
 
                     const rs = {
                         participante_id: participante.participante_id,
