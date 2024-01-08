@@ -211,10 +211,11 @@ export default class PlanoEntregaController {
 
                 const planoEntrega = {
                     ...plano,
+                    ...rsUnidade[0],
                     situacao: Situacao.situacao(plano.situacao_id),
                     metas_plano_entrega: metas,
-                    participantes: participantes,
-                    ...rsUnidade[0]
+                    participantes: participantes
+                    
                 }
 
                 return planoEntrega
