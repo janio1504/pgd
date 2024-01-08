@@ -47,7 +47,7 @@ export default class PlanoEntregaController {
 
         try {
 
-            const rsServidor = await Servidor.servidor(auth.user.id)
+            const rsServidor = await Servidor.servidorAuth(auth.user.id)
 
             const plano = await Database
                 .connection('pg')
@@ -111,7 +111,7 @@ export default class PlanoEntregaController {
 
         try {
 
-            const rsServidor = await Servidor.servidor(auth.user.id)
+            const rsServidor = await Servidor.servidorAuth(auth.user.id)
             
             const planos = await Database
                 .connection('pg')
