@@ -33,9 +33,8 @@ export default class PlanoTrabalhoController {
             const plano = await Database
                 .connection('pg')
                 .query()
-                .select('p.*', 's.descricao as situacao')
+                .select('p.*')
                 .from('plano_trabalho as p')
-                .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
                 .where('p.plano_trabalho_id', params.id)
 
             return plano
