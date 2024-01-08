@@ -9,7 +9,7 @@ export default class PlanoTrabalhoController {
 
         try {
 
-            const rsServidor = await Servidor.servidor(auth.user.id)
+            const rsServidor = await Servidor.servidorAuth(auth.user.id)
 
 
             const planos = await Database
