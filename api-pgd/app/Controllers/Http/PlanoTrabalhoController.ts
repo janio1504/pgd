@@ -1,19 +1,24 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
 import Plano from "App/Models/PlanoTrabalho";
+import Servidor from "App/Models/Servidor";
 
 export default class PlanoTrabalhoController {
 
-    public async getPlanosTrabalho({ params }) {
+    public async getPlanosTrabalho({ auth }) {
 
         try {
+
+            const rsServidor = await Servidor.servidor(auth.user.id)
+
+
             const planos = await Database
                 .connection('pg')
                 .query()
                 .select('p.*', 's.descricao as situacao')
                 .from('plano_trabalho as p')
                 .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
-                .where('p.servidor_id', params.id)
+                .where('p.servidor_id', rsServidor[0].id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
             return planos
         } catch (error) {
@@ -112,7 +117,7 @@ export default class PlanoTrabalhoController {
                 .whereIn('p.situacao_id',[1])
                 .orderBy('p.plano_trabalho_id','desc')
 
-            if (!pt[0]) {
+            if (pt[0].length > 0) {
                 throw response.status(400).send('Já existe um plano de trabalho cadastrado ativo ou em analise para o servidor!')
             }
 
@@ -123,7 +128,7 @@ export default class PlanoTrabalhoController {
                 .from('participante as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
 
-            if (!participante[0]) {
+            if (participante[0].length > 0) {
                 throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
             }
 

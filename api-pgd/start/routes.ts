@@ -48,7 +48,7 @@ Route.group(() => {
 
     Route.post('/create-plano-trabalho', 'PlanoTrabalhoController.createPlanoTrabalho')
     Route.post('/update-plano-trabalho', 'PlanoTrabalhoController.updatePlanoTrabalho')
-    Route.get('/get-planos-trabalho/:id', 'PlanoTrabalhoController.getPlanosTrabalho')
+    Route.get('/get-planos-trabalho', 'PlanoTrabalhoController.getPlanosTrabalho')
     Route.get('/get-plano-trabalho/:id', 'PlanoTrabalhoController.getPlanoTrabalho')
     Route.delete('/delete-plano-trabalho/:id', 'PlanoTrabalhoController.destroy')
 
