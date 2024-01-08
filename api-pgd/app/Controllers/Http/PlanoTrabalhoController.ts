@@ -123,16 +123,16 @@ export default class PlanoTrabalhoController {
             }
 
 
-            const participante = await Database
-                .connection('pg')
-                .query()
-                .from('participante as p')
-                .where('p.plano_entrega_id', plano_entrega_id)           
+            // const participante = await Database
+            //     .connection('pg')
+            //     .query()
+            //     .from('participante as p')
+            //     .where('p.plano_entrega_id', plano_entrega_id)           
                 
 
-            if (participante.length > 0) {
-                throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
-            }
+            // if (participante.length < 0) {
+            //     throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
+            // }
             
             await Database
                 .connection('pg')
