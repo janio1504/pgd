@@ -115,7 +115,7 @@ export default class PlanoTrabalhoController {
                 .from('plano_trabalho as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
                 .where('p.servidor_id', servidor_id)
-                .whereIn('p.situacao_id',[1])
+                .whereIn('p.situacao_id',[1,2,4])
                 .orderBy('p.plano_trabalho_id','desc')
 
             if (pt.length > 0) {
@@ -127,12 +127,13 @@ export default class PlanoTrabalhoController {
                 .connection('pg')
                 .query()
                 .from('participante as p')
-                .where('p.plano_entrega_id', plano_entrega_id)
+                .where('p.plano_entrega_id', plano_entrega_id)           
+                
 
             if (participante.length > 0) {
                 throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
             }
-
+            
             await Database
                 .connection('pg')
                 .insertQuery()
