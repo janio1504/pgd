@@ -9,9 +9,7 @@ export default class PlanoTrabalhoController {
 
         try {
 
-            const rsServidor = await Servidor.servidorAuth(auth.user.id)
-            console.log(rsServidor[0].id_servidor);
-            
+            const rsServidor = await Servidor.servidorAuth(auth.user.id)            
 
             const planos = await Database
                 .connection('pg')
@@ -21,6 +19,9 @@ export default class PlanoTrabalhoController {
                 .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
                 .where('p.servidor_id', rsServidor[0].id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
+
+            console.log(planos);
+            
             return planos
         } catch (error) {
             console.log(error);
