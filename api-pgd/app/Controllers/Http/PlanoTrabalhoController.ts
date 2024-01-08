@@ -109,7 +109,7 @@ export default class PlanoTrabalhoController {
                 .from('plano_trabalho as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
                 .where('p.servidor_id', servidor_id)
-                .whereIn('p.situacao_id',[1,3])
+                .whereIn('p.situacao_id',[1])
                 .orderBy('p.plano_trabalho_id','desc')
 
             if (!pt[0]) {
