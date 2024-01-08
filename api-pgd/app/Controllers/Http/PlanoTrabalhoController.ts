@@ -14,9 +14,8 @@ export default class PlanoTrabalhoController {
             const planos = await Database
                 .connection('pg')
                 .query()
-                .select('p.*', 's.descricao as situacao')
+                .select('p.*')
                 .from('plano_trabalho as p')
-                .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
                 .where('p.servidor_id', rsServidor[0].id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
 
