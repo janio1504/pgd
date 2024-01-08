@@ -179,7 +179,7 @@ export default class PlanoEntregaController {
 
                 const rsUnidade = await Database
                     .query()
-                    .select('u.nome as unidade')
+                    .select('u.nome as nome_unidade')
                     .from('comum.unidade as u')
                     .where('u.id_unidade', plano.unidade_id)
 
