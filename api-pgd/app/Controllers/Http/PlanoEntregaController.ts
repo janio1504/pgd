@@ -43,9 +43,12 @@ export default class PlanoEntregaController {
         }
     }
 
-    public async getPlanoDeEntrega({ params }) {
+    public async getPlanoDeEntrega({ params, auth }) {
 
         try {
+
+            const rsServidor = await Servidor.servidor(auth.user.id)
+
             const plano = await Database
                 .connection('pg')
                 .query()
@@ -70,7 +73,7 @@ export default class PlanoEntregaController {
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
-                    const rsServidor = await Servidor.servidor(participante.servidor_id)
+                    
 
                     const rs = {
                         participante_id: participante.participante_id,
