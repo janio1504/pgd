@@ -16,6 +16,9 @@ export default class Situacao {
       case 4:
         situacao = "Cadastrado"
         break;
+      case 5:
+        situacao = "Encerrado"
+        break;
       default:
         break;
     }
@@ -34,7 +37,7 @@ export default class Situacao {
         break;
       case 3:
         modalidade = "Presencial"
-        break;     
+        break;
       default:
         break;
     }

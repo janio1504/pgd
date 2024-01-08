@@ -84,8 +84,7 @@ export default class PlanoTrabalhoController {
             , data_inicio
             , data_fim
             , servidor_id
-            , percentual_atividade_nao_vinculadas
-            , situacao_id } = request.all()
+            , percentual_atividade_nao_vinculadas } = request.all()
         try {
 
             if (!nome_plano_trabalho) {
@@ -139,7 +138,7 @@ export default class PlanoTrabalhoController {
                     data_fim: data_fim,
                     servidor_id: servidor_id,
                     percentual_atividade_nao_vinculadas: percentual_atividade_nao_vinculadas,
-                    situacao_id: situacao_id
+                    situacao_id: 4
                 })
 
             return response.send('Plano de trabalho criado com sucesso!')

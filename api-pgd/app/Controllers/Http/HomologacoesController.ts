@@ -135,6 +135,36 @@ export default class HomologacoesController {
         }
     }
 
+
+    public async getPlanosTrabalhoParaHomologar({ params }) {
+
+        try {
+            const planos = await Database
+                .connection('pg')
+                .query()
+                .select('p.*', 's.descricao as situacao', 'pe.nome_plano_entrega', 'pe.data_inicio as data_inicio_plano_entrega',
+                'pe.data_fim as data_fim_plano_entrega')
+                .from('plano_trabalho as p')
+                .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
+                .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
+                .where('p.id_unidade', params.id)
+                .where('p.situacao_id', 2)
+                .orderBy('p.plano_trabalho_id', "desc")
+
+                const rsPlanos = await planos.map(plano=>{
+                    const rs = {
+                        ...plano,
+                        situacao: Situacao.situacao(plano.situacao_id)
+                    }
+                    return rs
+                })
+            return rsPlanos
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     public async isChefe(servidor_id, unidade_id) {
         try {
 

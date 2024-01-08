@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Database from "@ioc:Adonis/Lucid/Database"
+import Servidor from "App/Models/Servidor"
 
 export default class ParticipantesController {
     public async createParticipante({ request, response }) {
@@ -54,13 +55,7 @@ export default class ParticipantesController {
             const participantes = rsParticipantes.map(async participante => {
 
 
-                const rsServidor = await Database
-                    .query()
-                    .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
-                    .from('rh.servidor as s')
-                    .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-                    .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-                    .where('s.id_servidor', participante.servidor_id)
+                const rsServidor = await Servidor.servidor(participante.servidor_id)
 
                 const rs = {
                     ...participante,

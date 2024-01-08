@@ -2,6 +2,7 @@
 import Database from "@ioc:Adonis/Lucid/Database";
 import Plano from "App/Models/PlanoEntrega";
 import Situacao from "App/Models/Situacao"
+import Servidor from "App/Models/Servidor"
 
 export default class PlanoEntregaController {
 
@@ -50,6 +51,7 @@ export default class PlanoEntregaController {
                 .query()
                 .from('plano_entregas as p')
                 .where('p.plano_entrega_id', params.id)
+                .orderBy('p.plano_entrega_id', "desc")
 
             const planoEntrega = plano.map(async plano => {
 
@@ -57,13 +59,38 @@ export default class PlanoEntregaController {
                     .connection('pg')
                     .from('meta_plano_entrega')
                     .where('plano_entrega_id', plano.plano_entrega_id)
-                const pe = {
+
+
+                const rsParticipantes = await Database
+                    .connection('pg')
+                    .query()
+                    .from('participante as p')
+                    .where('p.plano_entrega_id', plano.plano_entrega_id)
+
+
+                const participantes = await Promise.all(rsParticipantes.map(async participante => {
+
+                    const rsServidor = await Servidor.servidor(participante.servidor_id)
+
+                    const rs = {
+                        participante_id: participante.participante_id,
+                        ...rsServidor[0],
+                        modalidade: Situacao.modalidade(participante.modalidade_id)
+                    }
+
+                    return rs
+                }))
+
+
+
+                const planoEntrega = {
                     ...plano,
                     situacao: Situacao.situacao(plano.situacao_id),
-                    metas_plano_entrega: metas
+                    metas_plano_entrega: metas,
+                    participantes: participantes
                 }
 
-                return pe
+                return planoEntrega
             })
 
             return planoEntrega[0]
@@ -106,16 +133,7 @@ export default class PlanoEntregaController {
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
-
-                    const rsServidor = await Database
-                        .query()
-                        .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
-                        .from('rh.servidor as s')
-                        .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-                        .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-                        .where('s.id_servidor', participante.servidor_id)
-                        .whereNull('s.data_desligamento')
-
+                    const rsServidor = await Servidor.servidor(participante.servidor_id)
 
                     const rs = {
                         participante_id: participante.participante_id,
@@ -187,16 +205,8 @@ export default class PlanoEntregaController {
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
 
-                    const rsServidor = await Database
-                        .query()
-                        .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
-                        .from('rh.servidor as s')
-                        .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-                        .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-                        .where('s.id_servidor', participante.servidor_id)
-                        .whereNull('s.data_desligamento')
+                    const rsServidor = await Servidor.servidor(participante.servidor_id)
 
-                    console.log(rsServidor);
 
                     const rs = {
                         participante_id: participante.participante_id,
@@ -215,7 +225,7 @@ export default class PlanoEntregaController {
                     situacao: Situacao.situacao(plano.situacao_id),
                     metas_plano_entrega: metas,
                     participantes: participantes
-                    
+
                 }
 
                 return planoEntrega
