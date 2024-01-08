@@ -37,6 +37,7 @@ Route.group(() => {
     Route.get('/get-planos-entrega/:id', 'PlanoEntregaController.getPlanosDeEntrega')
     Route.get('/get-plano-entrega/:id', 'PlanoEntregaController.getPlanoDeEntrega')
     Route.get('/get-pe-homologado-unidade/:id', 'PlanoEntregaController.getPlanoEntregaUnidadeHomologado')
+    Route.get('/get-pe-homologacao-unidade/:id', 'PlanoEntregaController.getPlanoEntregaUnidadeHomologacao')
     Route.delete('/delete-plano-entrega/:id', 'PlanoEntregaController.destroy')
 
     Route.post('/create-meta-plano-entrega', 'MetasController.createMeta')
