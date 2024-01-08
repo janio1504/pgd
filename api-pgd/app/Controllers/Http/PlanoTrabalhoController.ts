@@ -10,7 +10,8 @@ export default class PlanoTrabalhoController {
         try {
 
             const rsServidor = await Servidor.servidorAuth(auth.user.id)
-
+            console.log(rsServidor[0].id_servidor);
+            
 
             const planos = await Database
                 .connection('pg')
@@ -117,7 +118,7 @@ export default class PlanoTrabalhoController {
                 .whereIn('p.situacao_id',[1])
                 .orderBy('p.plano_trabalho_id','desc')
 
-            if (pt[0].length > 0) {
+            if (pt.length > 0) {
                 throw response.status(400).send('Já existe um plano de trabalho cadastrado ativo ou em analise para o servidor!')
             }
 
@@ -128,7 +129,7 @@ export default class PlanoTrabalhoController {
                 .from('participante as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
 
-            if (participante[0].length > 0) {
+            if (participante.length > 0) {
                 throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
             }
 
