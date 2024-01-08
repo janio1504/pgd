@@ -6,7 +6,7 @@ export default class Servidor {
     try {
       const rsServidor = await Database
         .query()
-        .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao')
+        .select('p.nome as nome_pessoa', 's.siape', 'un.nome as lotacao', 'un.id_unidade')
         .from('rh.servidor as s')
         .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
         .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')

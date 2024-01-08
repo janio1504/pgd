@@ -109,7 +109,7 @@ export default class PlanoEntregaController {
         try {
 
             const rsServidor = await Servidor.servidor(auth.user.id)
-
+            
             const planos = await Database
                 .connection('pg')
                 .query()
@@ -117,7 +117,7 @@ export default class PlanoEntregaController {
                 .where('p.unidade_id', rsServidor[0].id_unidade)
                 .where('p.situacao_id', 1)
                 .orderBy('p.plano_entrega_id', "desc")
-
+            
             if (planos.length < 0) {
                 throw response.status(400).send("Não foi encontrado plano de entrega homologado para a unidade!")
             }
