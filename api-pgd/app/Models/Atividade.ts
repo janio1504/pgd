@@ -19,6 +19,9 @@ export default class Atividade extends BaseModel {
 
   @column()
   public data_fim: DateTime
+  
+  @column()
+  public percentual_meta: string
 
   @column()
   public horas_atividade: string

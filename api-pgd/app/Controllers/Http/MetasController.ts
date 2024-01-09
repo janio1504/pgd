@@ -33,12 +33,24 @@ export default class MetasController {
     public async getMetas({ params }) {
 
         try {
-            const metas = await Database
+            const entregas = await Database
                 .connection('pg')
                 .query()
-                .from('meta_plano_entrega as m')
+                .from('meta_plano_entrega as m')                 
                 .where('m.plano_entrega_id', params.id)
                 .orderBy('m.meta_plano_entrega_id', "desc")
+
+                const atividades = await Database
+                .connection('pg')
+                .query()
+                .from('atividades as a')                 
+                .where('a.meta_plano_entrega_id', entregas[0].meta_plano_entrega_id)
+                .orderBy('a.atividade_id', "desc")
+
+                const metas = {
+                    ...entregas,
+                    atividades: atividades,
+                }
 
             return metas
         } catch (error) {

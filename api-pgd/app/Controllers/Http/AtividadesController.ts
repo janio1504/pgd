@@ -7,9 +7,11 @@ export default class AtividadesController {
 
     public async getAtividades({ params }){
         try {
-            const atividades = await Atividade
-            .query()
-            .where('plano_trabalho_id',params.id)
+            const atividades = await Database
+            .connection('pg')
+            .from('atividades as a')
+            .leftJoin('meta_plano_entrega as mpe', 'a.meta_plano_entrega_id', 'mpe.meta_plano_entrega_id')
+            .where('a.plano_trabalho_id',params.id)
 
             return atividades
         } catch (error) {
@@ -40,6 +42,7 @@ export default class AtividadesController {
             , horas_atividade
             , plano_trabalho_id
             , meta_plano_entrega_id
+            , percentual_meta
             , obs_atividade } = request.all()
         try {
             
@@ -51,6 +54,7 @@ export default class AtividadesController {
             atividade.horas_atividade = horas_atividade
             atividade.plano_trabalho_id = plano_trabalho_id
             atividade.meta_plano_entrega_id = meta_plano_entrega_id
+            atividade.percentual_meta = percentual_meta
             atividade.obs_atividade = obs_atividade
             await atividade.save()
 
@@ -69,6 +73,7 @@ export default class AtividadesController {
             , descricao_atividade
             , data_inicio
             , data_fim
+            , percentual_meta
             , horas_atividade
             , plano_trabalho_id
             , meta_plano_entrega_id
@@ -80,6 +85,7 @@ export default class AtividadesController {
             atividade.descricao_atividade = descricao_atividade ? descricao_atividade : atividade.descricao_atividade
             atividade.data_inicio = data_inicio ? data_inicio : atividade.data_inicio
             atividade.data_fim = data_fim ? data_fim : atividade.data_fim
+            atividade.percentual_meta = percentual_meta ? percentual_meta : atividade.percentual_meta
             atividade.horas_atividade = horas_atividade ? horas_atividade : atividade.horas_atividade
             atividade.plano_trabalho_id = plano_trabalho_id ? plano_trabalho_id : atividade.plano_trabalho_id
             atividade.meta_plano_entrega_id = meta_plano_entrega_id ? meta_plano_entrega_id : atividade.meta_plano_entrega_id
