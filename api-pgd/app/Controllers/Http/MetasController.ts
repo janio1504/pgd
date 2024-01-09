@@ -49,7 +49,7 @@ export default class MetasController {
 
                 const metas = {
                     ...entregas,
-                    atividades: atividades,
+                    ...atividades,
                 }
 
             return metas
