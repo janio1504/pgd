@@ -199,8 +199,7 @@ export default class HomologacoesController {
             const planos = await Database
                 .connection('pg')
                 .query()
-                .select('p.*', 'p.situacao_id', 'pe.nome_plano_entrega', 'pe.data_inicio as data_inicio_plano_entrega',
-                'pe.data_fim as data_fim_plano_entrega')
+                .select('p.*')
                 .from('plano_trabalho as p')
                 .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
                 .where('pe.unidade_id', servidor.id_unidade)
