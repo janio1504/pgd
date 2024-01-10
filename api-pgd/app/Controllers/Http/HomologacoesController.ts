@@ -205,7 +205,7 @@ export default class HomologacoesController {
                 .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
                 .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
                 .where('pe.unidade_id', servidor.id_unidade)
-                .where('p.situacao_id', 2)
+                //.where('p.situacao_id', 2)
                 .orderBy('p.plano_trabalho_id', "desc")
 
                 const rsPlanos = await planos.map(plano=>{
