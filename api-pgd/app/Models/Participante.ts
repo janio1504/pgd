@@ -1,19 +1,22 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import Database from "@ioc:Adonis/Lucid/Database";
 
 
-export default class Participante extends BaseModel {
-  @column({ isPrimary: true })
-  public id: number
 
-  @column()
-  public servidor_id: number
+export default class Participante {
+  public static async participante(plano_entrega_id) {
+    try {
+      const rsParticipantes = await Database
+        .connection('pg')
+        .query()
+        .from('participante as p')
+        .where('p.plano_entrega_id', plano_entrega_id)
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+      return rsParticipantes
+    } catch (error) {
+      console.log(error);
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+    }
+  }
 
 }
 

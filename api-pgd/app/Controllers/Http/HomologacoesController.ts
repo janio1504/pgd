@@ -204,7 +204,7 @@ export default class HomologacoesController {
                 .from('plano_trabalho as p')
                 .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
                 .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
-                .where('p.id_unidade', servidor.id_unidade)
+                .where('pe.unidade_id', servidor.id_unidade)
                 .where('p.situacao_id', 2)
                 .orderBy('p.plano_trabalho_id', "desc")
 
