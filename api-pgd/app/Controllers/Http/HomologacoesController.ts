@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Database from "@ioc:Adonis/Lucid/Database"
+import Servidor from "App/Models/Servidor"
 import Situacao from "App/Models/Situacao"
 
 export default class HomologacoesController {
@@ -40,33 +41,6 @@ export default class HomologacoesController {
         }
     }
 
-
-    public async createHomologacaoPlanoTrabalho({ request, response }) {
-        const { plano_trabalho_id, criterio_avaliacao } = request.all()
-
-        try {
-
-            if (!plano_trabalho_id) {
-                throw response.status(400).send('O plano de trabalho é obrigatório!')
-            }
-
-            await Database
-                .connection('pg')
-                .from('plano_trabalho as p')
-                .where('p.plano_trabalho_id', plano_trabalho_id)
-                .update({
-                    situacao_id: 2,
-                    criterio_avaliacao: criterio_avaliacao
-                })
-
-            return response.send('O plano foi enviado para homologação.')
-        } catch (error) {
-            console.log(error);
-            return error
-        }
-    }
-
-
     public async homologarPlanoEntrega({ request, response, auth }) {
         const { plano_entrega_id } = request.all()
         try {
@@ -97,6 +71,68 @@ export default class HomologacoesController {
                     situacao_id: 1,
                     data_homologacao: new Date().toLocaleDateString('pt-br', { timeZone: 'America/Belem' }),
                     servidor_id: servidor[0].servidor_id
+                })
+            return response.send('Homologação realizada com sucesso!')
+        } catch (error) {
+            console.log(error);
+
+            return error
+        }
+
+    }
+
+
+    public async createHomologacaoPlanoTrabalho({ request, response }) {
+        const { plano_trabalho_id, criterio_avaliacao } = request.all()
+
+        try {
+
+            if (!plano_trabalho_id) {
+                throw response.status(400).send('O plano de trabalho é obrigatório!')
+            }
+
+            await Database
+                .connection('pg')
+                .from('plano_trabalho as p')
+                .where('p.plano_trabalho_id', plano_trabalho_id)
+                .update({
+                    situacao_id: 2,
+                    criterio_avaliacao: criterio_avaliacao
+                })
+
+            return response.send('O plano foi enviado para homologação.')
+        } catch (error) {
+            console.log(error);
+            return error
+        }
+    }
+
+
+
+
+    public async homologarPlanoTrabalho({ request, response, auth }) {
+        const { plano_trabalho_id } = request.all()
+        try {
+            if (!plano_trabalho_id) {
+                throw response.status(400).send('O plano trabalho é obrigatório.')
+            }
+
+            const servidor = await Servidor.servidorAuth(auth.user.id)
+
+            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade)
+
+            if (!isChefe) {
+                return
+            }
+
+            await Database
+                .connection('pg')
+                .from('plano_trabalho as p')
+                .where('p.plano_trabalho_id', plano_trabalho_id)
+                .update({
+                    situacao_id: 1,
+                    data_homologacao: new Date().toLocaleDateString('pt-br', { timeZone: 'America/Belem' }),
+                    homologador_id: servidor[0].servidor_id
                 })
             return response.send('Homologação realizada com sucesso!')
         } catch (error) {
