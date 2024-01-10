@@ -215,7 +215,7 @@ export default class HomologacoesController {
                     }
                     return rs
                 })
-            return rsPlanos
+            return Promise.all(rsPlanos)
         } catch (error) {
             console.log(error);
 
