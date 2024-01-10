@@ -75,7 +75,7 @@ export default class PlanoEntregaController {
 
                     const rs = {
                         participante_id: participante.participante_id,
-                        ...rsServidor[0],
+                        ...rsServidor,
                         modalidade: Situacao.modalidade(participante.modalidade_id)
                     }
 
@@ -115,7 +115,7 @@ export default class PlanoEntregaController {
                 .connection('pg')
                 .query()
                 .from('plano_entregas as p')
-                .where('p.unidade_id', rsServidor[0].id_unidade)
+                .where('p.unidade_id', rsServidor.id_unidade)
                 .where('p.situacao_id', 1)
                 .orderBy('p.plano_entrega_id', "desc")
             
@@ -144,7 +144,7 @@ export default class PlanoEntregaController {
 
                     const rs = {
                         participante_id: participante.participante_id,
-                        ...rsServidor[0],
+                        ...rsServidor,
                         modalidade: Situacao.modalidade(participante.modalidade_id)
                     }
 
@@ -217,7 +217,7 @@ export default class PlanoEntregaController {
 
                     const rs = {
                         participante_id: participante.participante_id,
-                        ...rsServidor[0],
+                        ...rsServidor,
                         modalidade: Situacao.modalidade(participante.modalidade_id)
                     }
 

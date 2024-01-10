@@ -14,7 +14,7 @@ export default class Servidor {
         .where('u.id_usuario', id_usuario)
         .whereNull('s.data_desligamento')
 
-      return rsServidor
+      return rsServidor[0]
     } catch (error) {
       console.log(error);
       return error
@@ -33,7 +33,7 @@ export default class Servidor {
         .where('s.id_servidor', id_servidor)
         .whereNull('s.data_desligamento')
 
-      return rsServidor
+      return rsServidor[0]
     } catch (error) {
       console.log(error);
       return error

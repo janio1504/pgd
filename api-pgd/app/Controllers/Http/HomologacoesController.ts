@@ -48,16 +48,9 @@ export default class HomologacoesController {
                 throw response.status(400).send('O campo homologacao_plano_entrega_id é obrigatório.')
             }
 
-            const servidor = await Database
-                .query()
-                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade', 's.siape', 'un.nome as lotacao')
-                .from('rh.servidor as s')
-                .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-                .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
-                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-                .where('u.id_usuario', auth.user.id)
+            const servidor = await Servidor.servidorAuth(auth.user.id)
 
-            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade)
+            const isChefe = await this.isChefe(servidor.id_servidor, servidor.id_unidade)
 
             if (!isChefe) {
                 return
@@ -70,7 +63,7 @@ export default class HomologacoesController {
                 .update({
                     situacao_id: 1,
                     data_homologacao: new Date().toLocaleDateString('pt-br', { timeZone: 'America/Belem' }),
-                    servidor_id: servidor[0].servidor_id
+                    servidor_id: servidor.servidor_id
                 })
             return response.send('Homologação realizada com sucesso!')
         } catch (error) {
@@ -119,7 +112,7 @@ export default class HomologacoesController {
 
             const servidor = await Servidor.servidorAuth(auth.user.id)
 
-            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade)
+            const isChefe = await this.isChefe(servidor.id_servidor, servidor.id_unidade)
 
             if (!isChefe) {
                 return
@@ -132,7 +125,7 @@ export default class HomologacoesController {
                 .update({
                     situacao_id: 1,
                     data_homologacao: new Date().toLocaleDateString('pt-br', { timeZone: 'America/Belem' }),
-                    homologador_id: servidor[0].servidor_id
+                    homologador_id: servidor.servidor_id
                 })
             return response.send('Homologação realizada com sucesso!')
         } catch (error) {
@@ -147,16 +140,9 @@ export default class HomologacoesController {
         try {
 
 
-            const servidor = await Database
-                .query()
-                .select('s.id_servidor', 'p.id_pessoa', 'p.nome as nome_pessoa', 's.id_unidade_lotacao', 's.siape', 'un.nome as lotacao')
-                .from('rh.servidor as s')
-                .join('comum.pessoa as p', 's.id_pessoa', 'p.id_pessoa')
-                .join('comum.usuario as u', 'p.id_pessoa', 'u.id_pessoa')
-                .join('comum.unidade as un', 's.id_unidade', 'un.id_unidade')
-                .where('u.id_usuario', auth.user.id)
+            const servidor = await Servidor.servidorAuth(auth.user.id)
 
-            const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade_lotacao)
+            const isChefe = await this.isChefe(servidor.id_servidor, servidor.id_unidade)
 
             if (!isChefe) {
                 return
@@ -166,7 +152,7 @@ export default class HomologacoesController {
             const psh = await Database
                 .connection('pg')
                 .from('plano_entregas as p')
-                .where('p.unidade_superior_id', servidor[0].id_unidade_lotacao)
+                .where('p.unidade_superior_id', servidor.id_unidade)
                 .whereIn('p.situacao_id', [2, 3, 4])
 
 
@@ -198,9 +184,18 @@ export default class HomologacoesController {
     }
 
 
-    public async getPlanosTrabalhoParaHomologar({ params }) {
+    public async getPlanosTrabalhoParaHomologar({ auth }) {
 
         try {
+
+            const servidor = await Servidor.servidorAuth(auth.user.id)
+
+            const isChefe = await this.isChefe(servidor.id_servidor, servidor.id_unidade)
+
+            if (!isChefe) {
+                return
+            }
+
             const planos = await Database
                 .connection('pg')
                 .query()
@@ -209,7 +204,7 @@ export default class HomologacoesController {
                 .from('plano_trabalho as p')
                 .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
                 .innerJoin('situacao as s ', 'p.situacao_id', 's.id')
-                .where('p.id_unidade', params.id)
+                .where('p.id_unidade', servidor.id_unidade)
                 .where('p.situacao_id', 2)
                 .orderBy('p.plano_trabalho_id', "desc")
 

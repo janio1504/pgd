@@ -67,7 +67,8 @@ Route.group(() => {
 
     Route.post('/create-homologacao-plano-entrega', 'HomologacoesController.createHomologacaoPlanoEntrega')
     Route.post('/create-homologacao-plano-trabalho', 'HomologacoesController.createHomologacaoPlanoTrabalho')
-    Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosDeEntregaParaHomologar')    
+    Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosDeEntregaParaHomologar') 
+    Route.get('/get-pt-para-homologar', 'HomologacoesController.getPlanosTrabalhoParaHomologar')     
     Route.post('/homologar-plano-entrega', 'HomologacoesController.homologarPlanoEntrega')
     
 

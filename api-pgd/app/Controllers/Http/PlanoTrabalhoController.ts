@@ -16,7 +16,7 @@ export default class PlanoTrabalhoController {
                 .query()
                 .select('p.*')
                 .from('plano_trabalho as p')
-                .where('p.servidor_id', rsServidor[0].id_servidor)
+                .where('p.servidor_id', rsServidor.id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
 
             console.log(planos);

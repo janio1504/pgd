@@ -21,7 +21,7 @@ export default class AtividadesController {
                 const servidor = await Servidor.servidor(atividade.servidor_id)
                 const rs = {
                     ...atividade,
-                    servidor: servidor[0]
+                    servidor: servidor
                 }
                 return rs
             })
@@ -51,7 +51,7 @@ export default class AtividadesController {
                 const servidor = await Servidor.servidor(atividade.servidor_id)
                 const rs = {
                     ...atividade,
-                    servidor: servidor[0]
+                    servidor: servidor
                 }
                 return rs
             })
