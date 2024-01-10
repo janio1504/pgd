@@ -19,8 +19,7 @@ export default class PlanoTrabalhoController {
                 .where('p.servidor_id', rsServidor.id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
 
-            console.log(planos);
-            
+                        
             return planos
         } catch (error) {
             console.log(error);

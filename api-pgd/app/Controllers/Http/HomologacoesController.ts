@@ -164,7 +164,7 @@ export default class HomologacoesController {
 
                 const situacao = Situacao.situacao(plano.situacao_id)
 
-          
+
                 const rs = {
                     plano_entrega_id: plano.plano_entrega_id,
                     unidade_id: plano.unidade_id,
@@ -196,23 +196,26 @@ export default class HomologacoesController {
                 return
             }
 
+
             const planos = await Database
                 .connection('pg')
                 .query()
                 .select('p.*')
                 .from('plano_trabalho as p')
-                .innerJoin('plano_entrega as pe','p.plano_entrega_id', 'pe.plano_entrega_id')
+                .innerJoin('plano_entregas as pe', 'p.plano_entrega_id', 'pe.plano_entrega_id')
                 .where('pe.unidade_id', servidor.id_unidade)
                 .where('p.situacao_id', 2)
                 .orderBy('p.plano_trabalho_id', "desc")
 
-                const rsPlanos = await planos.map(plano=>{
-                    const rs = {
-                        ...plano,
-                        situacao: Situacao.situacao(plano.situacao_id)
-                    }
-                    return rs
-                })
+            const rsPlanos = planos.map(async plano => {
+                const servidorPlano = await Servidor.servidor(plano.servidor_id)
+                const rs = {
+                    servidor: servidorPlano.nome_pessoa,
+                    ...plano,                    
+                    situacao: Situacao.situacao(plano.situacao_id)
+                }
+                return rs
+            })
             return Promise.all(rsPlanos)
         } catch (error) {
             console.log(error);
