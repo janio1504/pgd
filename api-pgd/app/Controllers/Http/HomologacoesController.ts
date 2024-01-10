@@ -41,6 +41,32 @@ export default class HomologacoesController {
     }
 
 
+    public async createHomologacaoPlanoTrabalho({ request, response }) {
+        const { plano_trabalho_id, criterio_avaliacao } = request.all()
+
+        try {
+
+            if (!plano_trabalho_id) {
+                throw response.status(400).send('O plano de trabalho é obrigatório!')
+            }
+
+            await Database
+                .connection('pg')
+                .from('plano_trabalho as p')
+                .where('p.plano_trabalho_id', plano_trabalho_id)
+                .update({
+                    situacao_id: 2,
+                    criterio_avaliacao: criterio_avaliacao
+                })
+
+            return response.send('O plano foi enviado para homologação.')
+        } catch (error) {
+            console.log(error);
+            return error
+        }
+    }
+
+
     public async homologarPlanoEntrega({ request, response, auth }) {
         const { plano_entrega_id } = request.all()
         try {
