@@ -46,7 +46,7 @@ export default class PlanoEntregaController {
 
     public async getPlanoDeEntrega({ params }) {
 
-        try {            
+        try {
 
             const plano = await Database
                 .connection('pg')
@@ -111,7 +111,7 @@ export default class PlanoEntregaController {
         try {
 
             const rsServidor = await Servidor.servidorAuth(auth.user.id)
-            
+
             const planos = await Database
                 .connection('pg')
                 .query()
@@ -119,7 +119,7 @@ export default class PlanoEntregaController {
                 .where('p.unidade_id', rsServidor.id_unidade)
                 .where('p.situacao_id', 1)
                 .orderBy('p.plano_entrega_id', "desc")
-            
+
             if (planos.length < 0) {
                 throw response.status(400).send("Não foi encontrado plano de entrega homologado para a unidade!")
             }
@@ -141,7 +141,7 @@ export default class PlanoEntregaController {
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
-                    
+
 
                     const rs = {
                         participante_id: participante.participante_id,
@@ -342,17 +342,23 @@ export default class PlanoEntregaController {
                 .select('p.*')
                 .from('plano_trabalho as p')
                 .where('p.plano_entrega_id', params.id)
-            
-            if(pt.length > 0){
-                throw response.status(400).send("Existe plano de trabalho cadastrado para o plano entrega!")
+
+            if (pt.length !== 0) {
+                throw response.status(400).send("Existe plano de trabalho cadastrado para o plano de entrega!")
             }
 
             const participantes = await Participante.participante(params.id)
 
-            
+            if (participantes?.length !== 0) {
+                participantes?.map(async participante => {
+                    await Database
+                        .connection('pg')
+                        .from('participante')
+                        .where('participante_id', participante.participante_id)
+                        .delete()
+                })
+            }
 
-
-            
             const plano = await Plano.findByOrFail('plano_entrega_id', params.id)
             await plano.delete()
             return "O Plano " + plano.nome_plano_entrega + " foi removido"
