@@ -1,19 +1,34 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
 import Atividade from "App/Models/Atividade"
+import Servidor from "App/Models/Servidor";
 
 export default class AtividadesController {
 
 
     public async getAtividades({ params }){
         try {
-            const atividades = await Database
+            const resAtividades = await Database
             .connection('pg')
+            .query()
+            .select('a.*','mpe.titulo as titulo_meta', 'pt.servidor_id')
             .from('atividades as a')
+            .innerJoin('plano_trabalho as pt', 'a.plano_trabalho_id', 'pt.plano_trabalho_id')
             .leftJoin('meta_plano_entrega as mpe', 'a.meta_plano_entrega_id', 'mpe.meta_plano_entrega_id')
             .where('a.plano_trabalho_id',params.id)
+            
+            const atividades = resAtividades.map(async atividade=>{
+                const servidor = await Servidor.servidor(atividade.servidor_id)
+                const rs = {
+                    ...atividade,
+                    servidor: servidor[0]
+                }
+                return rs
+            })
 
-            return atividades
+            
+
+            return Promise.all(atividades)
         } catch (error) {
             console.log(error);
             
@@ -22,11 +37,28 @@ export default class AtividadesController {
 
     public async getAtividade({ params }){
         try {
-            const atividade = await Atividade
+            const rsAtividade = await Database
+            .connection('pg')
             .query()
-            .where('atividade_id',params.id)
+            .select('a.*','mpe.titulo as titulo_meta', 'pt.servidor_id')
+            .from('atividades as a')
+            .innerJoin('plano_trabalho as pt', 'a.plano_trabalho_id', 'pt.plano_trabalho_id')
+            .leftJoin('meta_plano_entrega as mpe', 'a.meta_plano_entrega_id', 'mpe.meta_plano_entrega_id')
+            .where('a.atividade_id',params.id)
 
-            return atividade
+
+            const atividade = rsAtividade.map(async atividade=>{
+                const servidor = await Servidor.servidor(atividade.servidor_id)
+                const rs = {
+                    ...atividade,
+                    servidor: servidor[0]
+                }
+                return rs
+            })
+
+            
+
+            return Promise.all(atividade)
         } catch (error) {
             console.log(error);
             
