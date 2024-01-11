@@ -1,5 +1,6 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
+import Servidor from "App/Models/Servidor";
 
 export default class MetasController {
     public async createMeta({ request }) {
@@ -45,11 +46,16 @@ export default class MetasController {
                 const atividades = await Database
                     .connection('pg')
                     .query()
+                    .select('a.*', 'p.servidor_id')
                     .from('atividades as a')
+                    .innerJoin('plano_trabalho as p', 'a.plano_trabalho_id', 'p.plano_trabalho_id')
                     .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
-                    .orderBy('a.atividade_id', "desc")
+                    .orderBy('a.atividade_id', "desc") 
+                    
+                const servidor = await Servidor.servidor(atividades[0].servidor_id)
 
                 const rs = {
+                    servidor: servidor.nome_pessoa,
                     ...entrega,
                     atividades: atividades
                 }

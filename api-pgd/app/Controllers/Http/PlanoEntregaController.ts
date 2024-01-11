@@ -3,6 +3,7 @@ import Database from "@ioc:Adonis/Lucid/Database";
 import Plano from "App/Models/PlanoEntrega";
 import Situacao from "App/Models/Situacao"
 import Servidor from "App/Models/Servidor"
+import Participante from "App/Models/Participante";
 
 export default class PlanoEntregaController {
 
@@ -332,14 +333,32 @@ export default class PlanoEntregaController {
 
     }
 
-    public async destroy({ params }) {
+    public async destroy({ params, response }) {
         try {
+
+            const pt = await Database
+                .connection('pg')
+                .query()
+                .select('p.*')
+                .from('plano_trabalho as p')
+                .where('p.plano_entrega_id', params.id)
+            
+            if(pt.length > 0){
+                throw response.status(400).send("Existe plano de trabalho cadastrado para o plano entrega!")
+            }
+
+            const participantes = await Participante.participante(params.id)
+
+            
+
+
+            
             const plano = await Plano.findByOrFail('plano_entrega_id', params.id)
             await plano.delete()
             return "O Plano " + plano.nome_plano_entrega + " foi removido"
         } catch (error) {
             console.log(error);
-
+            return error
         }
     }
 }
