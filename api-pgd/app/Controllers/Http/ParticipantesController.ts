@@ -59,7 +59,7 @@ export default class ParticipantesController {
 
                 const rs = {
                     ...participante,
-                    ...rsServidor[0]
+                    ...rsServidor
                 }
 
                 return rs
