@@ -70,6 +70,7 @@ Route.group(() => {
     Route.get('/get-pe-para-homologar', 'HomologacoesController.getPlanosDeEntregaParaHomologar') 
     Route.get('/get-pt-para-homologar', 'HomologacoesController.getPlanosTrabalhoParaHomologar')     
     Route.post('/homologar-plano-entrega', 'HomologacoesController.homologarPlanoEntrega')
+    Route.post('/homologar-plano-trabalho', 'HomologacoesController.homologarPlanoTrabalho')
     
 
 }).middleware('auth:api')
