@@ -42,7 +42,7 @@ export default class PlanoTrabalhoController {
                 .where('p.plano_trabalho_id', params.id)
 
             const servidor = await Servidor.servidor(plano[0].servidor_id)
-
+            return servidor
             const rs = {
                 servidor: servidor.nome_pessoa,
                 ...plano[0],
