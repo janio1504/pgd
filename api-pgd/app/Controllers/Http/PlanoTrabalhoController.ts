@@ -2,6 +2,7 @@
 import Database from "@ioc:Adonis/Lucid/Database";
 import Plano from "App/Models/PlanoTrabalho";
 import Servidor from "App/Models/Servidor";
+import Situacao from "App/Models/Situacao";
 
 export default class PlanoTrabalhoController {
 
@@ -9,7 +10,7 @@ export default class PlanoTrabalhoController {
 
         try {
 
-            const rsServidor = await Servidor.servidorAuth(auth.user.id)            
+            const rsServidor = await Servidor.servidorAuth(auth.user.id)
 
             const planos = await Database
                 .connection('pg')
@@ -19,7 +20,10 @@ export default class PlanoTrabalhoController {
                 .where('p.servidor_id', rsServidor.id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
 
-                        
+
+
+
+
             return planos
         } catch (error) {
             console.log(error);
@@ -32,11 +36,20 @@ export default class PlanoTrabalhoController {
             const plano = await Database
                 .connection('pg')
                 .query()
-                .select('p.*')
+                .select('p.*', 'pe.servidor_id')
                 .from('plano_trabalho as p')
+                .innerJoin('plano_entregas as pe', 'p.plano_entrega_id', 'pe.plano_entrega_id')
                 .where('p.plano_trabalho_id', params.id)
 
-            return plano
+            const servidor = await Servidor.servidor(plano[0].servidor_id)
+
+            const rs = {
+                servidor: servidor.nome_pessoa,
+                ...plano[0],
+                situacao: Situacao.situacao(plano[0].situacao_id)
+            }
+
+            return Promise.all(rs)
         } catch (error) {
             console.log(error);
 
@@ -113,8 +126,8 @@ export default class PlanoTrabalhoController {
                 .from('plano_trabalho as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
                 .where('p.servidor_id', servidor_id)
-                .whereIn('p.situacao_id',[1,2,4])
-                .orderBy('p.plano_trabalho_id','desc')
+                .whereIn('p.situacao_id', [1, 2, 4])
+                .orderBy('p.plano_trabalho_id', 'desc')
 
             if (pt.length > 0) {
                 throw response.status(400).send('Já existe um plano de trabalho cadastrado ativo ou em analise para o servidor!')
@@ -126,12 +139,12 @@ export default class PlanoTrabalhoController {
             //     .query()
             //     .from('participante as p')
             //     .where('p.plano_entrega_id', plano_entrega_id)           
-                
+
 
             // if (participante.length < 0) {
             //     throw response.status(400).send('O servidor não esta indicado para o plano de entrega!')
             // }
-            
+
             await Database
                 .connection('pg')
                 .insertQuery()
