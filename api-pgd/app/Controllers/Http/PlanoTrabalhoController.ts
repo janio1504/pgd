@@ -18,13 +18,18 @@ export default class PlanoTrabalhoController {
                 .select('p.*')
                 .from('plano_trabalho as p')
                 .where('p.servidor_id', rsServidor.id_servidor)
-                .orderBy('p.plano_trabalho_id', "desc")
+                .orderBy('p.plano_trabalho_id', "desc")            
 
+            const rsPlanos = planos.map( plano=>{
+                const rs = {
+                    sevidor: rsServidor.nome_pessoa,
+                    ...plano,
+                    situacao: Situacao.situacao(plano.situacao_id)                    
+                }
+                return rs
+            })      
 
-
-
-
-            return planos
+            return rsPlanos
         } catch (error) {
             console.log(error);
 
