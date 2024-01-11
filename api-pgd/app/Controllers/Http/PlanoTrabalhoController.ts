@@ -36,11 +36,10 @@ export default class PlanoTrabalhoController {
             const plano = await Database
                 .connection('pg')
                 .query()
-                .select('p.*', 'pe.servidor_id')
+                .select('p.*')
                 .from('plano_trabalho as p')
-                .innerJoin('plano_entregas as pe', 'p.plano_entrega_id', 'pe.plano_entrega_id')
                 .where('p.plano_trabalho_id', params.id)
-                return plano
+                
             const servidor = await Servidor.servidor(plano[0].servidor_id)
             
             const rs = {
