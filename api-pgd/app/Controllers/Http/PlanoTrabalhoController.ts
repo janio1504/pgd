@@ -49,7 +49,7 @@ export default class PlanoTrabalhoController {
                 situacao: Situacao.situacao(plano[0].situacao_id)
             }
 
-            return Promise.all(rs)
+            return rs
         } catch (error) {
             console.log(error);
 
