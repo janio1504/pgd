@@ -49,6 +49,7 @@ export default class PlanoTrabalhoController {
             
             const rs = {
                 servidor: servidor.nome_pessoa,
+                carga_horaria: servidor.carga_horaria,                
                 ...plano[0],
                 situacao: Situacao.situacao(plano[0].situacao_id)
             }
