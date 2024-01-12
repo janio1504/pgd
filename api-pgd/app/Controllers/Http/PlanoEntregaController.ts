@@ -140,9 +140,6 @@ export default class PlanoEntregaController {
 
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
-
-
-
                     const rs = {
                         participante_id: participante.participante_id,
                         ...rsServidor,
