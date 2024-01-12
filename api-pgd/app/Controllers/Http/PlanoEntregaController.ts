@@ -141,11 +141,20 @@ export default class PlanoEntregaController {
 
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
+                    const ptParticipante = await Database
+                    .connection('pg')
+                    .query()
+                    .from('plano_trabalho as p')
+                    .where('p.servidor_id', participante.servidor_id)
+                    
+                    const planoTrabalho = ptParticipante.length > 0 ? true : false
+
                     const servidor = await Servidor.servidor(participante.servidor_id)
                     const rs = {
                         participante_id: participante.participante_id,
                         ...servidor,
-                        modalidade: Situacao.modalidade(participante.modalidade_id)
+                        modalidade: Situacao.modalidade(participante.modalidade_id),
+                        plano_trabalho: planoTrabalho
                     }
 
                     return rs
