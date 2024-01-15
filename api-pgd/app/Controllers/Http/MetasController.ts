@@ -52,10 +52,10 @@ export default class MetasController {
                     .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
                     .orderBy('a.atividade_id', "desc") 
                     
-                const servidor = await Servidor.servidor(atividades[0].servidor_id)
+                //const servidor = await Servidor.servidor(atividades[0].servidor_id)
 
                 const rs = {
-                   servidor: servidor,
+                   //servidor: servidor,
                     ...entrega,
                     atividades: atividades
                 }
