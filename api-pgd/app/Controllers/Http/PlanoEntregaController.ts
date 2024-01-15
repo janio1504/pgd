@@ -142,11 +142,11 @@ export default class PlanoEntregaController {
                 const participantes = await Promise.all(rsParticipantes.map(async participante => {
 
                     const ptParticipante = await Database
-                    .connection('pg')
-                    .query()
-                    .from('plano_trabalho as p')
-                    .where('p.servidor_id', participante.servidor_id)
-                    
+                        .connection('pg')
+                        .query()
+                        .from('plano_trabalho as p')
+                        .where('p.servidor_id', participante.servidor_id)
+
                     const planoTrabalho = ptParticipante.length > 0 ? true : false
 
                     const servidor = await Servidor.servidor(participante.servidor_id)
@@ -252,6 +252,28 @@ export default class PlanoEntregaController {
             console.log(error);
 
             throw new Error(error);
+
+        }
+    }
+
+    public async recusarPlanoEntrega({ request, response }) {
+
+        const { plano_entrega_id
+            , motivo_recusa } = request.all()
+        try {
+
+            await Database
+                .connection('pg')
+                .from('plano_entregas')
+                .where('plano_entrega_id', plano_entrega_id)
+                .update({
+                    motivo_recusa: motivo_recusa,
+                    situacao_id: 3
+                })
+
+            return response.status(200).send('Atualização realizada com sucesso!')
+        } catch (error) {
+            console.log(error);
 
         }
     }

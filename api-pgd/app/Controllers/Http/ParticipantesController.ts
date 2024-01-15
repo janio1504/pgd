@@ -2,6 +2,7 @@
 
 import Database from "@ioc:Adonis/Lucid/Database"
 import Servidor from "App/Models/Servidor"
+import Situacao from "App/Models/Situacao"
 
 export default class ParticipantesController {
     public async createParticipante({ request, response }) {
@@ -56,10 +57,12 @@ export default class ParticipantesController {
 
 
                 const rsServidor = await Servidor.servidor(participante.servidor_id)
+                const modalidade = Situacao.modalidade(participante.modalidade_id)
 
                 const rs = {
                     ...participante,
-                    ...rsServidor
+                    ...rsServidor,
+                    modalidade: modalidade
                 }
 
                 return rs

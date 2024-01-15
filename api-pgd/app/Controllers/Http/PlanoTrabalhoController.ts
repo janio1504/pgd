@@ -18,16 +18,16 @@ export default class PlanoTrabalhoController {
                 .select('p.*')
                 .from('plano_trabalho as p')
                 .where('p.servidor_id', rsServidor.id_servidor)
-                .orderBy('p.plano_trabalho_id', "desc")            
+                .orderBy('p.plano_trabalho_id', "desc")
 
-            const rsPlanos = planos.map( plano=>{
+            const rsPlanos = planos.map(plano => {
                 const rs = {
                     sevidor: rsServidor.nome_pessoa,
                     ...plano,
-                    situacao: Situacao.situacao(plano.situacao_id)                    
+                    situacao: Situacao.situacao(plano.situacao_id)
                 }
                 return rs
-            })      
+            })
 
             return rsPlanos
         } catch (error) {
@@ -44,17 +44,39 @@ export default class PlanoTrabalhoController {
                 .select('p.*')
                 .from('plano_trabalho as p')
                 .where('p.plano_trabalho_id', params.id)
-                
+
             const servidor = await Servidor.servidor(plano[0].servidor_id)
-            
+
             const rs = {
                 servidor: servidor.nome_pessoa,
-                carga_horaria: servidor.carga_horaria,                
+                carga_horaria: servidor.carga_horaria,
                 ...plano[0],
                 situacao: Situacao.situacao(plano[0].situacao_id)
             }
 
             return rs
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    public async recusarPlanoTrabalho({ request, response }) {
+
+        const { plano_trabalho_id
+            , motivo_recusa } = request.all()
+        try {
+
+            await Database
+                .connection('pg')
+                .from('plano_trabalho')
+                .where('plano_trabalho_id', plano_trabalho_id)
+                .update({
+                    motivo_recusa: motivo_recusa,
+                    situacao_id: 3
+                })
+
+            return response.status(200).send('Atualização realizada com sucesso!')
         } catch (error) {
             console.log(error);
 

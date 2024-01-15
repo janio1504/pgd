@@ -11,7 +11,7 @@ export default class Situacao {
         situacao = "Em analise"
         break;
       case 3:
-        situacao = "Indeferido"
+        situacao = "Recusado"
         break;
       case 4:
         situacao = "Cadastrado"

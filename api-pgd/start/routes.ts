@@ -34,6 +34,7 @@ Route.group(() => {
 
     Route.post('/create-plano-entrega', 'PlanoEntregaController.createPlanoEntrega')
     Route.post('/update-plano-entrega', 'PlanoEntregaController.updatePlanoEntrega')
+    Route.post('/recusar-plano-entrega', 'PlanoEntregaController.recusarPlanoEntrega')
     Route.get('/get-planos-entrega/:id', 'PlanoEntregaController.getPlanosDeEntrega')
     Route.get('/get-plano-entrega/:id', 'PlanoEntregaController.getPlanoDeEntrega')
     Route.get('/get-pe-homologado', 'PlanoEntregaController.getPlanoEntregaUnidadeHomologado')
