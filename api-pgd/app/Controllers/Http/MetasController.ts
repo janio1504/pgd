@@ -55,7 +55,7 @@ export default class MetasController {
                 const servidor = await Servidor.servidor(atividades[0].servidor_id)
 
                 const rs = {
-                   servidor: servidor.nome_pessoa,
+                   servidor: servidor,
                     ...entrega,
                     atividades: atividades
                 }
