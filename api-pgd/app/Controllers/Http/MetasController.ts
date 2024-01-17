@@ -40,7 +40,7 @@ export default class MetasController {
                 .from('meta_plano_entrega as m')
                 .where('m.plano_entrega_id', params.id)
                 .orderBy('m.meta_plano_entrega_id', "desc")
-
+            
             const entregasAtividades = entregas.map(async entrega => {
 
                 const atividades = await Database
@@ -50,12 +50,12 @@ export default class MetasController {
                     .from('atividades as a')
                     .innerJoin('plano_trabalho as p', 'a.plano_trabalho_id', 'p.plano_trabalho_id')
                     .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
-                    .orderBy('a.atividade_id', "desc") 
-                    
-                //const servidor = await Servidor.servidor(atividades[0].servidor_id)
+                    .orderBy('a.atividade_id', "desc")
+                
+                const servidor = await Servidor.servidor(atividades[0]?.servidor_id)
 
                 const rs = {
-                   //servidor: servidor,
+                    servidor: servidor.nome_pessoa,
                     ...entrega,
                     atividades: atividades
                 }
@@ -80,22 +80,21 @@ export default class MetasController {
                 .where('m.meta_plano_entrega_id', params.id)
 
 
-                const entregaAtividades = entrega.map(async entrega => {
+            const entregaAtividades = entrega.map(async entrega => {
 
-                    const atividades = await Database
-                        .connection('pg')
-                        .query()
-                        .from('atividades as a')
-                        .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
-                        .orderBy('a.atividade_id', "desc")
-    
-                    const rs = {
-                        ...entrega,
-                        atividades: atividades
-                    }
-                    return rs
-    
-                })
+                const atividades = await Database
+                    .connection('pg')
+                    .query()
+                    .from('atividades as a')
+                    .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
+                    .orderBy('a.atividade_id', "desc")
+
+                const rs = {
+                    ...entrega,
+                    atividades: atividades
+                }
+                return rs
+            })
 
             return Promise.all(entregaAtividades)
         } catch (error) {
