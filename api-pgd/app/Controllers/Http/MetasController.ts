@@ -51,16 +51,17 @@ export default class MetasController {
                     .innerJoin('plano_trabalho as p', 'a.plano_trabalho_id', 'p.plano_trabalho_id')
                     .where('a.meta_plano_entrega_id', entrega.meta_plano_entrega_id)
                     .orderBy('a.atividade_id', "desc")
-                    
+
                 const servidor = await Servidor.servidor(rsAtividades[0]?.servidor_id)
 
-                const atividades = rsAtividades.map(atividade => {
+                const atividades = await Promise.all(rsAtividades.map( async atividade => {
+                    const servidor = await Servidor.servidor(atividade.servidor_id)
                     const rs = {
                         ...atividade,
                         servidor: servidor
                     }
                     return rs
-                })
+                }))
 
                 const rs = {
                     servidor: servidor.nome_pessoa,
