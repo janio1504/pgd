@@ -1,5 +1,6 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
+import PlanoTrabalho from "App/Models/PlanoTrabalho";
 import Plano from "App/Models/PlanoTrabalho";
 import Servidor from "App/Models/Servidor";
 import Situacao from "App/Models/Situacao";
@@ -44,13 +45,14 @@ export default class PlanoTrabalhoController {
                 .select('p.*')
                 .from('plano_trabalho as p')
                 .where('p.plano_trabalho_id', params.id)
-
+            
             const servidor = await Servidor.servidor(plano[0].servidor_id)
 
             const rs = {
                 servidor: servidor.nome_pessoa,
                 carga_horaria: servidor.carga_horaria,
                 ...plano[0],
+                horas_plano_trabalho: await PlanoTrabalho.horasPeriodo(plano[0].data_inicio, plano[0].data_fim, servidor.carga_horaria),
                 situacao: Situacao.situacao(plano[0].situacao_id)
             }
 

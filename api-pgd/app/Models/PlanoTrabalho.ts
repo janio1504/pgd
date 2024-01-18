@@ -65,15 +65,15 @@ export default class PlanoTrabalho extends BaseModel {
 
       const horasPorPeriodo = (dias * horasDiarias)
 
-      const hfs = await Database.connection('pg').query().from('calendario_feriados').sum('horas as total').first()
+      const qfs = await Database.connection('pg').query().from('feriados').count('feriado_id')
+      
+      //const ho = await Database.connection('pg').query().from('ocorrencias').sum('horas_ocorrencia as total').first()
 
-      const ho = await Database.connection('pg').query().from('ocorrencias').sum('horas_ocorrencia as total').first()
+      const horasFeriados = parseInt(qfs[0].count) * horasDiarias
 
-      const horasFeriados = (hfs.total / 8) * horasDiarias
+      //const horasOcorrencias = ho.total * horasDiarias
 
-      const horasOcorrencias = (ho.total / 8) * horasDiarias
-
-      return (horasPorPeriodo - horasFeriados) - horasOcorrencias
+      return (horasPorPeriodo - horasFeriados) //- horasOcorrencias
 
 
     } catch (error) {
