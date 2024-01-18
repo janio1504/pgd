@@ -21,16 +21,17 @@ export default class PlanoTrabalhoController {
                 .where('p.servidor_id', rsServidor.id_servidor)
                 .orderBy('p.plano_trabalho_id', "desc")
 
-            const rsPlanos = planos.map(plano => {
+            const rsPlanos = planos.map(async plano => {
                 const rs = {
                     sevidor: rsServidor.nome_pessoa,
                     ...plano,
+                    horas_plano_trabalho: await PlanoTrabalho.horasPeriodo(plano.data_inicio, plano.data_fim, rsServidor.carga_horaria),
                     situacao: Situacao.situacao(plano.situacao_id)
                 }
                 return rs
             })
 
-            return rsPlanos
+            return Promise.all(rsPlanos)
         } catch (error) {
             console.log(error);
 
