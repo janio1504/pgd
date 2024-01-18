@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class PlanoTrabalho extends BaseModel {
 
@@ -37,83 +38,42 @@ export default class PlanoTrabalho extends BaseModel {
   public updatedAt: DateTime
 
 
-  public static horasPeriodo() {
+  public static async horasPeriodo(data_inicio, data_fim, carga_horaria) {
 
     try {
-      const data_inicio = new Date('2024-01-01')
-      const data_fim = new Date('2024-12-31')
 
-      let n = 0
-      let meses = 1
+      let dias = 0;
 
-      if (data_fim.getFullYear() > data_inicio.getFullYear()) {
-        const m2 = data_fim.getMonth() + 1
-        const m1 = 12 - (data_inicio.getMonth() + 1)
-        meses = m1 + m2
-        if ((data_fim.getMonth() + 1) == 1) {
-          meses = meses + 1
+      data_inicio.setHours(0, 0, 0, 0);
+      data_fim.setHours(0, 0, 0, 0);
+
+      let current = new Date(data_inicio);
+      current.setDate(current.getDate() + 1);
+      let dia;
+
+      while (current <= data_fim) {
+        dia = current.getDay();
+
+        if (dia >= 1 && dia <= 5) {
+          ++dias;
         }
+        current.setDate(current.getDate() + 1);
       }
 
-      if (data_fim.getFullYear() === data_inicio.getFullYear()) {
-        const m2 = (data_fim.getMonth() + 1)
-        const m1 = (data_inicio.getMonth() + 1)
-        if ((data_inicio.getMonth() + 1) == 1 && (data_fim.getMonth() + 1) == 12) {
-          meses = 12
-        } else {
-          meses = m2 - m1
-        }
-        if ((data_inicio.getMonth() + 1) == (data_fim.getMonth() + 1)) {
-          meses = 1
-        }
-      }
-      const anoAtual = new Date().getFullYear()
-      let mesAnoInicio = (data_inicio.getMonth() + 1)
-      let mesAnoFim = (data_fim.getMonth() + 1) / (data_fim.getMonth() + 1)
 
-      let dias = 0
-      for (let index = 1; index <= meses; index++) {
+      let horasDiarias = (carga_horaria / 5)
 
-        if (index <= 12 && data_inicio.getFullYear() === anoAtual) {
-          let dataAnoInicio = new Date(anoAtual, mesAnoInicio, 0)
-          
-          let diasMes = dataAnoInicio.getDate()
-          let diasUteis = 0
+      const horasPorPeriodo = (dias * horasDiarias)
 
-          for (let i = 1; i <= diasMes; i++) {
-            let diaSemana = new Date(anoAtual, mesAnoInicio, i).getDay()
-            if ((diaSemana !== 0) && (diaSemana !== 6)) {
-              diasUteis++
-            }
-          }
-          dias = dias + diasUteis
+      const hfs = await Database.connection('pg').query().from('calendario_feriados').sum('horas as total').first()
 
-          mesAnoInicio++
+      const ho = await Database.connection('pg').query().from('ocorrencias').sum('horas_ocorrencia as total').first()
 
-        }
+      const horasFeriados = (hfs.total / 8) * horasDiarias
 
+      const horasOcorrencias = (ho.total / 8) * horasDiarias
 
-        if (mesAnoFim <= (data_fim.getMonth() + 1) && data_inicio.getFullYear() < anoAtual && data_fim.getFullYear() == anoAtual) {
-          let dataAnoFim = new Date(anoAtual, mesAnoFim, 0)
-          let diasMes = dataAnoFim.getDate()
-          let diasUteis = 0
-
-          for (let i = 1; i <= diasMes; i++) {
-            let diaSemana = new Date(anoAtual, mesAnoFim, i).getDay()
-            if ((diaSemana !== 0) && (diaSemana !== 6)) {
-              diasUteis++
-            }
-          }
-          dias = dias + diasUteis
-
-          mesAnoFim++
-        }
-      }
-
-      
-
-
-      return dias
+      return (horasPorPeriodo - horasFeriados) - horasOcorrencias
 
 
     } catch (error) {
