@@ -73,6 +73,13 @@ Route.group(() => {
     Route.get('/get-pt-para-homologar', 'HomologacoesController.getPlanosTrabalhoParaHomologar')     
     Route.post('/homologar-plano-entrega', 'HomologacoesController.homologarPlanoEntrega')
     Route.post('/homologar-plano-trabalho', 'HomologacoesController.homologarPlanoTrabalho')
+
+    Route.post('/create-feriado', 'CalendarioController.createFeriado')
+    Route.post('/update-feriado', 'CalendarioController.updateFeriado')
+    Route.get('/get-feriados', 'CalendarioController.getFeriados') 
+    Route.get('/get-feriado/:id', 'CalendarioController.getFeriado')     
+    Route.delete('/delete-feriado/:id', 'CalendarioController.destroy')
+    
     
 
 }).middleware('auth:api')

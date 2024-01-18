@@ -38,7 +38,7 @@ export default class PlanoTrabalho extends BaseModel {
   public updatedAt: DateTime
 
 
-  public static async horasPeriodo(data_inicio, data_fim, carga_horaria) {
+  public static async horasPeriodo(data_inicio?, data_fim?, carga_horaria?) {
 
     try {
 

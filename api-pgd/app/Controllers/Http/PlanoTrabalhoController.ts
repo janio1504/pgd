@@ -1,6 +1,5 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from "@ioc:Adonis/Lucid/Database";
-import PlanoTrabalho from "App/Models/PlanoTrabalho";
 import Plano from "App/Models/PlanoTrabalho";
 import Servidor from "App/Models/Servidor";
 import Situacao from "App/Models/Situacao";
@@ -38,9 +37,7 @@ export default class PlanoTrabalhoController {
     }
 
     public async getPlanoTrabalho({ params }) {
-        try {
-
-            return PlanoTrabalho.horasPeriodo()
+        try {            
             const plano = await Database
                 .connection('pg')
                 .query()
