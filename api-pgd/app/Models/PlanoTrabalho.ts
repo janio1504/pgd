@@ -41,18 +41,21 @@ export default class PlanoTrabalho extends BaseModel {
 
     try {
       const data_inicio = new Date('2024-01-01')
-      const data_fim = new Date('2024-12-01')
+      const data_fim = new Date('2024-12-31')
 
       let n = 0
-      let meses = 0
+      let meses = 1
 
       if (data_fim.getFullYear() > data_inicio.getFullYear()) {
         const m2 = data_fim.getMonth() + 1
         const m1 = 12 - (data_inicio.getMonth() + 1)
         meses = m1 + m2
+        if ((data_fim.getMonth() + 1) == 1) {
+          meses = meses + 1
+        }
       }
 
-      if (data_fim.getFullYear() == data_inicio.getFullYear()) {
+      if (data_fim.getFullYear() === data_inicio.getFullYear()) {
         const m2 = (data_fim.getMonth() + 1)
         const m1 = (data_inicio.getMonth() + 1)
         if ((data_inicio.getMonth() + 1) == 1 && (data_fim.getMonth() + 1) == 12) {
@@ -67,32 +70,49 @@ export default class PlanoTrabalho extends BaseModel {
       const anoAtual = new Date().getFullYear()
       let mesAnoInicio = (data_inicio.getMonth() + 1)
       let mesAnoFim = (data_fim.getMonth() + 1) / (data_fim.getMonth() + 1)
+
       let dias = 0
       for (let index = 1; index <= meses; index++) {
 
-        if ((data_inicio.getMonth() + 1) <= 12 && data_inicio.getFullYear() == anoAtual) {
-          dias = dias + new Date(anoAtual, mesAnoInicio, 0).getDate()
-          // for (let i = 0; i < meses; i++) {         
+        if (index <= 12 && data_inicio.getFullYear() === anoAtual) {
+          let dataAnoInicio = new Date(anoAtual, mesAnoInicio, 0)
+          
+          let diasMes = dataAnoInicio.getDate()
+          let diasUteis = 0
 
-          // }
+          for (let i = 1; i <= diasMes; i++) {
+            let diaSemana = new Date(anoAtual, mesAnoInicio, i).getDay()
+            if ((diaSemana !== 0) && (diaSemana !== 6)) {
+              diasUteis++
+            }
+          }
+          dias = dias + diasUteis
+
           mesAnoInicio++
+
         }
 
-        
 
         if (mesAnoFim <= (data_fim.getMonth() + 1) && data_inicio.getFullYear() < anoAtual && data_fim.getFullYear() == anoAtual) {
-          dias = dias + new Date(anoAtual, mesAnoFim, 0).getDate()
-          // for (let i = 0; i < meses; i++) {         
+          let dataAnoFim = new Date(anoAtual, mesAnoFim, 0)
+          let diasMes = dataAnoFim.getDate()
+          let diasUteis = 0
 
-          // }
+          for (let i = 1; i <= diasMes; i++) {
+            let diaSemana = new Date(anoAtual, mesAnoFim, i).getDay()
+            if ((diaSemana !== 0) && (diaSemana !== 6)) {
+              diasUteis++
+            }
+          }
+          dias = dias + diasUteis
+
           mesAnoFim++
         }
-
-
-
-        n++
-
       }
+
+      
+
+
       return dias
 
 

@@ -40,7 +40,7 @@ export default class PlanoTrabalhoController {
     public async getPlanoTrabalho({ params }) {
         try {
 
-            //return PlanoTrabalho.horasPeriodo()
+            return PlanoTrabalho.horasPeriodo()
             const plano = await Database
                 .connection('pg')
                 .query()
