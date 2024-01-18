@@ -74,6 +74,37 @@ export default class ParticipantesController {
         }
     }
 
+    public async getParticipantes() {
+        try {
+            
+            const rsParticipantes = await Database
+                .connection('pg')
+                .query()
+                .from('participante as p')
+                .where('p.situacao', true)
+
+            const participantes = rsParticipantes.map(async participante => {
+
+
+                const rsServidor = await Servidor.servidor(participante.servidor_id)
+                const modalidade = Situacao.modalidade(participante.modalidade_id)
+
+                const rs = {
+                    participante_id: participante.participante_id,                   
+                    situacao: participante.situacao,
+                    ...rsServidor,
+                    modalidade: modalidade
+                }
+
+                return rs
+            })
+            return await Promise.all(participantes)
+
+        } catch (error) {
+            return error
+        }
+    }
+
 
     public async updateParticipante({ request, response }) {
 
