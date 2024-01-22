@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Database from "@ioc:Adonis/Lucid/Database";
+import users from "App/Models/Users";
 
 export default class ServidoresController {
     public async getServidor({ auth }) {
@@ -16,9 +17,11 @@ export default class ServidoresController {
                 .where('u.id_usuario', auth.user.id)
 
             const isChefe = await this.isChefe(servidor[0].id_servidor, servidor[0].id_unidade)
+            const isAdmin = await users.isAdmin(auth.user.id)
             const rsServidor = {
                 ...servidor[0],
-                isChefe: isChefe
+                isChefe: isChefe,
+                isAdmin: isAdmin
             }
 
             return rsServidor
