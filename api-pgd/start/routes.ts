@@ -30,7 +30,7 @@ Route.group(() => {
 
     Route.get('/get-servidor', 'ServidoresController.getServidor')
     Route.get('/get-servidores-unidade/:id', 'ServidoresController.getServidoresUnidade')
-    
+    Route.post('/set-chefia-unidade', 'ServidoresController.setUnidadeChefia')
 
     Route.post('/create-plano-entrega', 'PlanoEntregaController.createPlanoEntrega')
     Route.post('/update-plano-entrega', 'PlanoEntregaController.updatePlanoEntrega')

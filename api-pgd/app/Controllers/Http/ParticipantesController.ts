@@ -74,9 +74,12 @@ export default class ParticipantesController {
         }
     }
 
-    public async getParticipantes() {
+    public async getParticipantes({session}) {
         try {
-            
+            session.put('unidade',{'id': 10})
+            const ct = session.get('unidade')           
+            console.log(ct);
+            return ct
             const rsParticipantes = await Database
                 .connection('pg')
                 .query()
@@ -85,12 +88,11 @@ export default class ParticipantesController {
 
             const participantes = rsParticipantes.map(async participante => {
 
-
                 const rsServidor = await Servidor.servidor(participante.servidor_id)
                 const modalidade = Situacao.modalidade(participante.modalidade_id)
 
                 const rs = {
-                    participante_id: participante.participante_id,                   
+                    participante_id: participante.participante_id,
                     situacao: participante.situacao,
                     ...rsServidor,
                     modalidade: modalidade

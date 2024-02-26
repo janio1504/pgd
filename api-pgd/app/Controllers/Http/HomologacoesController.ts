@@ -20,9 +20,7 @@ export default class HomologacoesController {
                 .from('plano_entregas as p')
                 .where('p.plano_entrega_id', plano_entrega_id)
 
-
             const unidade_superior_id = await this.unidadeSuperior(pe[0].unidade_id)
-
 
             await Database
                 .connection('pg')
@@ -139,7 +137,7 @@ export default class HomologacoesController {
     public async getPlanosDeEntregaParaHomologar({ auth }) {
         try {
 
-
+            
             const servidor = await Servidor.servidorAuth(auth.user.id)
 
             const isChefe = await this.isChefe(servidor.id_servidor, servidor.id_unidade)
